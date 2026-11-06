@@ -1,0 +1,65 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+venv/
+.venv/
+env/
+
+# Python caches and tooling
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+.coverage
+.coverage.*
+htmlcov/
+.hypothesis/
+
+# Packaging and build output
+build/
+dist/
+*.egg-info/
+
+# Logs and local runtime data
+*.log
+*.pid
+*.sqlite
+*.sqlite3
+*.db
+
+# Generated experiment results
+results/*.json
+results/*.csv
+
+# Generated TPC-H data and binaries
+tpch-dbgen/*.tbl
+tpch-dbgen/*.exe
+tpch-dbgen/*.obj
+tpch-dbgen/*.pdb
+tpch-dbgen/*.lib
+tpch-dbgen/*.dll
+
+# LaTeX auxiliary files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.out
+*.synctex.gz
+*.toc
+
+# IDE and notebook files
+.vscode/
+.idea/
+.ipynb_checkpoints/
+
+# Operating-system files
+.DS_Store
+Thumbs.db

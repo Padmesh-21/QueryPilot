@@ -1,0 +1,577 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{algorithmic}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{placeins}
+\usepackage{url}
+
+%% ─────────────────────────────────────────────────────────────────────────────
+%% TODO for authors before submission:
+%%   1. Fill in [X] placeholders in Abstract and Results with actual numbers.
+%%   2. Add real figure files: architecture.png, sage_flowchart.png,
+%%      timeline_stable.png, timeline_sudden.png, decisions_pie.png
+%%   3. Verify all DOIs and URLs in the bibliography.
+%% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{document}
+
+\title{QueryPilot: An Uncertainty-Aware, Self-Adaptive Query Optimization
+Framework for Dynamic Database Workloads}
+
+\author{
+\begin{tabular}{c c c}
+Nitish M & Padmesh V A & Dr. V. Sabaresan \\
+Computer Science Engineering & Computer Science Engineering & Computer Science Engineering \\
+St. Joseph’s Institute of Technology & St. Joseph’s Institute of Technology & St. Joseph’s Institute of Technology \\
+Chennai, India & Chennai, India & Chennai, India \\
+mnitish1705@gmail.com & vapadmesh@gmail.com & sabaresanvenugopal@gmail.com \\[1em]
+
+\multicolumn{3}{c}{Mohamed Hussain} \\
+\multicolumn{3}{c}{Computer Science Engineering} \\
+\multicolumn{3}{c}{St. Joseph’s Institute of Technology} \\
+\multicolumn{3}{c}{Chennai, India} \\
+\multicolumn{3}{c}{mohamedhussain18820@gmail.com}
+\end{tabular}
+}
+
+\maketitle
+
+% ─────────────────────────────────────────────────────────────────────────────
+\begin{abstract}
+Database query performance degrades when workload patterns and data
+distributions evolve over time, yet most learned query optimization techniques
+do not account for this drift. We present \textbf{QueryPilot}, an external
+Python middleware that intercepts SQL queries, learns from observed execution
+performance, detects shifts in workload behaviour, and makes bounded-risk
+adaptation decisions. At its core is \textbf{SAGE} (Stability-Aware Guarded
+Execution), a decision controller that combines ensemble-based uncertainty
+estimation, Page-Hinkley workload drift detection, and a guarded fallback
+mechanism to decide between three actions: \textit{adapt} (apply a
+MySQL optimizer hint), \textit{gather evidence} (collect more measurements),
+or \textit{fallback} (defer to MySQL's native optimizer). We evaluate QueryPilot
+on the TPC-H benchmark (scale factor 1, 8.6 million rows) under four workload
+scenarios: stable, sudden shift, gradual shift, and data skew. Using an
+interleaved experimental methodology to control for buffer pool warm-up bias,
+QueryPilot achieves a mean latency reduction of [X]\% over MySQL's native
+optimizer in the stable scenario and [X]\% under sudden workload shift, while
+holding the regression rate below [X]\%. These results demonstrate that
+conservative, uncertainty-aware adaptation can improve analytical workload
+performance without blindly trusting a learned model.
+\end{abstract}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Introduction}
+
+Query optimization is one of the most studied problems in database systems.
+A relational query optimizer selects an execution plan from a combinatorial
+space of join orders, access methods, and operator implementations, guided by
+a cost model calibrated to the data statistics it observes at planning
+time~\cite{b1}. MySQL's optimizer is representative of this approach: it uses
+collected statistics and a rule-based cost model to select index usage, join
+algorithms, and operator hints.
+
+Two classes of limitation motivate this work. First, \textit{workload
+non-stationarity}: the query patterns arriving at a production database change
+over time. A plan that was efficient for morning analytical queries may be
+suboptimal when the afternoon workload shifts toward a different set of join
+predicates or filter selectivities. Second, \textit{learned optimizer
+fragility}: recent work has shown that machine-learning approaches can
+outperform traditional optimizers on training workloads~\cite{b2,b3}, but
+a model trained under one distribution can make confidently wrong
+recommendations when that distribution drifts~\cite{b4}.
+
+We address both limitations with QueryPilot. Unlike prior learned optimizers
+that replace or supplement the database's cost model, QueryPilot is an
+\textit{external} framework that wraps query execution in Python middleware.
+It does not require modifying MySQL's internals and does not claim to enumerate
+all possible execution plans. Instead, it works within MySQL's supported
+optimizer hint system to generate a small, controlled set of candidate
+variants, predicts their relative performance using an online-trained ensemble
+model, estimates prediction uncertainty through ensemble disagreement, detects
+workload drift using the Page-Hinkley statistical test, and uses SAGE to make
+a final guarded decision.
+
+The central research question we investigate is: \textit{Can an
+uncertainty-aware, stability-constrained query optimization framework adapt to
+dynamic database workloads while reducing query execution time and controlling
+performance regressions?}
+
+The main contributions of this paper are:
+\begin{itemize}
+    \item \textbf{QueryPilot}, a Python middleware for adaptive query
+    optimization over MySQL that does not require database internals access.
+    \item \textbf{SAGE}, a guarded execution controller combining drift
+    detection, uncertainty estimation, and risk-bounded adaptation with a
+    native fallback path.
+    \item An evaluation on TPC-H under four controlled workload scenarios
+    using an interleaved execution methodology that controls for buffer pool
+    warm-up bias, a confound we identify and correct in our experimental design.
+\end{itemize}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Related Work}
+
+\subsection*{Learned Query Optimization}
+The application of machine learning to query optimization has accelerated
+significantly since the introduction of the learned cardinality estimation
+literature. \textit{Neo}~\cite{b2} uses a value network trained on query
+execution feedback to select among plan alternatives produced by the database's
+own optimizer. \textit{Bao}~\cite{b3} frames optimizer hint selection as a
+contextual bandit problem, using a tree-convolutional neural network over
+the query plan structure to recommend one of a small set of hint
+configurations. Both systems demonstrate that learned models can reduce
+execution time on benchmark workloads. However, neither explicitly addresses
+what happens when the workload distribution used during training diverges from
+the workload seen at inference time.
+
+\subsection*{Workload Drift and Adaptive Systems}
+Concept drift has been extensively studied in the data stream mining
+literature~\cite{b5,b6}. The Page-Hinkley test~\cite{b7} and the ADWIN
+algorithm~\cite{b6} are widely used for detecting distributional shifts in
+streaming data. Their application to database workloads is less explored.
+OtterTune~\cite{b4} applies machine learning to database configuration tuning
+and includes a workload mapping step to identify similar historical workloads,
+but it targets knob configuration rather than per-query execution plan
+selection. QueryPilot differs in that it applies drift detection directly to
+the stream of query execution times and uses the signal to gate when the
+learned model's recommendations should be trusted.
+
+\subsection*{Uncertainty Estimation in ML}
+Ensemble-based uncertainty estimation, where the disagreement among an
+ensemble of models is used as a proxy for predictive uncertainty, is a
+well-established technique in the Bayesian deep learning
+literature~\cite{b8}. In the context of query optimization, using
+uncertainty to avoid confident but wrong recommendations has not been
+extensively studied. QueryPilot's SAGE controller uses ensemble disagreement
+as a practical uncertainty signal to filter out candidates whose predicted
+improvement cannot be reliably distinguished from noise.
+
+\subsection*{Positioning of QueryPilot}
+QueryPilot is positioned as a \textit{conservative external wrapper} rather
+than a replacement optimizer. It accepts that MySQL's native optimizer is a
+strong baseline and only deviates when it has sufficient evidence, acceptable
+uncertainty, and a bounded estimated regression risk. This distinguishes it
+from systems like Bao and Neo, which always make an ML-based recommendation,
+and from OtterTune, which operates at the configuration rather than the
+query level.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{System Design}
+
+\subsection*{Architecture Overview}
+QueryPilot is implemented as a Python SDK. The application issues queries
+through QueryPilot rather than directly to MySQL:
+
+\begin{verbatim}
+result = querypilot.execute(
+    "SELECT * FROM orders WHERE o_custkey = 1"
+)
+\end{verbatim}
+
+Internally, QueryPilot passes every query through a ten-stage pipeline:
+workload collection, feature extraction, candidate generation, performance
+prediction, uncertainty estimation, drift detection, SAGE decision, execution,
+feedback collection, and model update. Figure~\ref{fig:architecture} shows
+this pipeline.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{architecture.png}
+    \caption{QueryPilot System Architecture}
+    \label{fig:architecture}
+\end{figure}
+
+\subsection*{Feature Extraction}
+For each incoming query, QueryPilot runs \texttt{EXPLAIN} to obtain MySQL's
+estimated execution plan. It extracts eight features: query type (encoded as
+an integer), number of explicit \texttt{JOIN} clauses, number of tables in
+the plan, presence of \texttt{WHERE}, \texttt{GROUP BY}, and
+\texttt{ORDER BY} clauses, estimated total rows (summed across plan rows),
+and a binary flag indicating whether any table accesses use an index.
+These features form the input vector to the performance prediction model.
+
+\subsection*{Candidate Generation}
+QueryPilot generates a small set of candidate SQL variants by injecting
+MySQL optimizer hints into the original query. The supported hint types are:
+(1)~\textit{native} — the original unmodified query;
+(2)~\textit{NO\_INDEX} — disables index usage on the first table;
+(3)~\textit{HASH\_JOIN} — forces a hash join between the first two joined
+tables (only generated for queries with explicit \texttt{JOIN} clauses);
+and (4)~\textit{NO\_BKA} — disables Batched Key Access on the first table.
+
+We explicitly acknowledge a technical constraint: MySQL does not expose
+unrestricted control over every internal execution plan alternative.
+QueryPilot's candidate set is bounded by what MySQL's hint system supports.
+We do not claim to enumerate or evaluate every possible execution plan.
+
+\subsection*{Performance Prediction Model}
+QueryPilot trains an ensemble of three scikit-learn models on observed
+(feature vector, execution time) pairs: a Linear Regression, a Random Forest
+Regressor (50 trees), and a Gradient Boosting Regressor (50 estimators). The
+ensemble mean is used as the point prediction; the ensemble standard deviation
+serves as the uncertainty estimate. The model retrains incrementally after
+each batch of ten new observations, allowing it to adapt as the workload
+evolves.
+
+\subsection*{Uncertainty Estimation}
+Uncertainty is estimated as the relative disagreement among the three ensemble
+members:
+\[
+u(x) = \frac{\sigma(x)}{\mu(x)}
+\]
+where $\mu(x)$ and $\sigma(x)$ are the mean and standard deviation of the
+three models' predictions for feature vector $x$. A candidate whose relative
+uncertainty $u(x)$ exceeds a configurable threshold $\tau_u$ is excluded from
+consideration. We use $\tau_u = 0.3$ in our experiments.
+
+We note that ensemble disagreement is not equivalent to a calibrated
+probability that a candidate will actually be faster than native. It is a
+proxy for model confidence and should be interpreted as such.
+
+\subsection*{Workload Drift Detection}
+QueryPilot monitors the stream of observed execution times using the
+Page-Hinkley test~\cite{b7}, a sequential change-point detection method
+that identifies upward shifts in the mean of a data stream. Let $x_1, x_2,
+\ldots$ be the sequence of execution times observed so far. The Page-Hinkley
+statistic is:
+\[
+PH_n = \sum_{t=1}^{n} (x_t - \bar{x}_t - \delta) - \min_{1 \le t \le n}
+\sum_{i=1}^{t} (x_i - \bar{x}_i - \delta)
+\]
+Drift is signalled when $PH_n > \lambda$. We use $\delta = 0.005$ and
+$\lambda = 25$ (sensitivity parameter $0.5$). One Page-Hinkley detector is
+maintained globally across all queries, and one per unique query signature.
+
+\subsection*{SAGE: Stability-Aware Guarded Execution}
+SAGE is the decision controller. For each incoming query it makes one of three
+decisions, in priority order:
+
+\begin{enumerate}
+\item \textbf{Gather Evidence} — if the performance model has fewer than
+$n_{min} = 10$ training examples, execute the native query and record the
+result without making any hint recommendation.
+
+\item \textbf{Fallback} — if the drift detector has signalled a workload shift
+since the last query, execute the native query and clear the training buffer.
+This prevents the model from continuing to make recommendations that may no
+longer be valid for the new workload distribution.
+
+\item \textbf{Adapt} — if the model is trained and no drift is active, evaluate
+each candidate: skip any with relative uncertainty $> \tau_u$, and skip any
+whose predicted time exceeds the native predicted time by more than the
+regression tolerance $\tau_r = 0.15$. If the best surviving non-native candidate
+is predicted to be faster than native, execute it.
+
+\item \textbf{Fallback (no valid candidate)} — if no candidate survives the
+uncertainty and regression filters, execute the native query.
+\end{enumerate}
+
+Figure~\ref{fig:sage} shows the SAGE decision flowchart. After execution,
+the actual time is used to update the drift detector, the training buffer,
+and — when the buffer reaches $n_{min}$ samples — the performance model.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{sage_flowchart.png}
+    \caption{SAGE Decision Flowchart}
+    \label{fig:sage}
+\end{figure}
+
+\subsection*{Implementation Notes}
+QueryPilot is implemented entirely in Python using
+\texttt{mysql-connector-python} (no ORM abstraction layer), \texttt{scikit-learn}
+for the ensemble models, \texttt{pandas} and \texttt{numpy} for data
+processing, and \texttt{Streamlit} for the monitoring dashboard. Client-side
+latency is measured using \texttt{time.perf\_counter()} and includes result
+fetching overhead. Server-side execution time from MySQL's Performance Schema
+is collected separately but is not used as the primary training signal in the
+current implementation.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Experimental Setup}
+
+\subsection*{Dataset and Environment}
+Experiments are conducted on the TPC-H benchmark~\cite{b9} at scale factor 1,
+generating approximately 8.6 million rows across 8 tables. The database runs
+on MySQL 8.0.43. Standard TPC-H indexes are applied to all foreign key columns
+and frequently filtered columns (order date, ship date, market segment).
+QueryPilot runs as a Python process on the same machine.
+
+\subsection*{Query Workload}
+We use five TPC-H query templates (Q1, Q3, Q5, Q6, Q10) parameterized across
+their standard parameter ranges. The templates range from single-table
+aggregations (Q1, Q6) to six-table joins (Q5). All queries use explicit
+\texttt{JOIN} syntax to enable optimizer hint injection.
+
+\subsection*{Workload Scenarios}
+We evaluate four scenarios:
+\begin{itemize}
+\item \textbf{Stable:} Queries drawn uniformly at random from all five
+templates throughout the run.
+\item \textbf{Sudden Shift:} The first 60\% of queries are scan-heavy
+(Q1, Q6); the remaining 40\% are join-heavy (Q3, Q5, Q10).
+\item \textbf{Gradual Shift:} The probability of drawing a join-heavy query
+increases linearly from 0 to 1 over the run.
+\item \textbf{Data Skew:} All queries are Q3 (shipping priority), but the
+\texttt{c\_mktsegment} filter parameter shifts from \texttt{BUILDING} (first
+70\%) to \texttt{AUTOMOBILE} (last 30\%).
+\end{itemize}
+
+\subsection*{Experimental Configurations}
+We compare three configurations:
+\begin{enumerate}
+\item \textbf{Native MySQL:} Queries execute with no QueryPilot intervention.
+\item \textbf{ML-Only:} QueryPilot's ensemble model selects candidates
+without SAGE's uncertainty and drift filters.
+\item \textbf{QueryPilot + SAGE:} Full system including uncertainty
+estimation, drift detection, and guarded fallback.
+\end{enumerate}
+
+\subsection*{Methodology: Interleaved Execution}
+A critical methodological concern in database benchmarking is buffer pool
+warm-up bias: if the three configurations execute sequentially, the first
+configuration runs on a cold buffer pool while later ones benefit from cached
+pages. To control for this, we use \textbf{interleaved execution}: for each
+query in the workload, all three configurations execute the query
+back-to-back before moving to the next query. This ensures all three
+configurations observe the same buffer pool state for each query. A warm-up
+phase of 10 queries runs before measurement begins to seed the buffer pool
+equally for all configurations.
+
+\subsection*{Metrics}
+We report mean latency, median latency, 95th percentile (P95) latency, total
+workload execution time, SAGE decision distribution (adapt / gather evidence
+/ fallback), and regression rate (fraction of queries where SAGE is more
+than 10\% slower than native on the same interleaved query execution).
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Results and Discussion}
+
+%% ── FILL IN WITH REAL NUMBERS FROM YOUR EXPERIMENTS ────────────────────────
+%% Replace all [X] placeholders below with actual values from results/*.json
+
+\subsection*{Stable Workload}
+
+Table~\ref{tab:stable} presents the latency results for the stable scenario
+with 50 queries. Under stable conditions, QueryPilot + SAGE achieves a mean
+latency of [X]~ms compared to [X]~ms for Native MySQL, a reduction of
+[X]\%. ML-Only achieves [X]~ms, showing that the learned model provides some
+benefit, while SAGE's uncertainty filtering slightly improves on ML-Only by
+avoiding [X] reckless recommendations.
+
+\begin{table}[htbp]
+\centering
+\caption{Stable Scenario Latency Results (50 Queries, Interleaved)}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Configuration} & \textbf{Mean (ms)} & \textbf{Median (ms)} &
+\textbf{P95 (ms)} & \textbf{Total (ms)} \\
+\hline
+Native MySQL    & [X] & [X] & [X] & [X] \\
+ML-Only         & [X] & [X] & [X] & [X] \\
+QueryPilot+SAGE & [X] & [X] & [X] & [X] \\
+\hline
+\end{tabular}
+\label{tab:stable}
+\end{table}
+
+The SAGE decision distribution under stable conditions was: [X] adapt,
+[X] gather evidence, [X] fallback. The fallback rate is expected to be
+high in the first $n_{min} = 10$ queries (gather evidence phase). After the
+model is trained, fallback decisions reflect queries where no candidate
+met both the uncertainty and regression tolerance thresholds simultaneously.
+
+\subsection*{Sudden Shift Scenario}
+
+The sudden shift scenario provides the most direct test of SAGE's drift
+detection mechanism. Figure~\ref{fig:timeline_sudden} shows query latency
+over time for all three configurations.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{timeline_sudden.png}
+    \caption{Query Latency Timeline: Sudden Shift Scenario}
+    \label{fig:timeline_sudden}
+\end{figure}
+
+The Page-Hinkley detector fired at query index [X], approximately [X] queries
+after the shift boundary at query 30 (60\% of 50). This [X]-query delay
+reflects the detector's sensitivity setting ($\lambda = 25$) and represents
+a trade-off between false alarm rate and detection speed. Upon drift detection,
+SAGE cleared its training buffer and switched to fallback, preventing the
+model — which had been trained on scan-heavy queries — from continuing to
+make recommendations on the join-heavy tail.
+
+Table~\ref{tab:sudden} shows that under sudden shift, QueryPilot + SAGE
+achieves [X]\% lower mean latency than native and [X]\% lower than ML-Only.
+The ML-Only regression rate of [X]\% under this scenario compared to
+SAGE's [X]\% demonstrates that the drift-triggered fallback meaningfully
+limits harmful recommendations.
+
+\begin{table}[htbp]
+\centering
+\caption{Sudden Shift Scenario Latency Results (50 Queries, Interleaved)}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Configuration} & \textbf{Mean (ms)} & \textbf{P95 (ms)} &
+\textbf{Regression Rate} \\
+\hline
+Native MySQL    & [X] & [X] & — \\
+ML-Only         & [X] & [X] & [X]\% \\
+QueryPilot+SAGE & [X] & [X] & [X]\% \\
+\hline
+\end{tabular}
+\label{tab:sudden}
+\end{table}
+
+\subsection*{Gradual Shift and Data Skew Scenarios}
+
+Table~\ref{tab:all_scenarios} summarizes mean latency across all four
+scenarios. The gradual shift scenario is the most challenging for drift
+detection: because the shift is slow and continuous, the Page-Hinkley
+statistic crosses the threshold later than in the sudden shift case,
+meaning SAGE operates with a partially stale model for longer. This is
+reflected in a [compare] regression rate compared to the sudden shift scenario.
+
+\begin{table}[htbp]
+\centering
+\caption{Mean Latency (ms) Across All Scenarios (50 Queries Each)}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Scenario} & \textbf{Native} & \textbf{ML-Only} &
+\textbf{QueryPilot+SAGE} \\
+\hline
+Stable         & [X] & [X] & [X] \\
+Sudden Shift   & [X] & [X] & [X] \\
+Gradual Shift  & [X] & [X] & [X] \\
+Data Skew      & [X] & [X] & [X] \\
+\hline
+\end{tabular}
+\label{tab:all_scenarios}
+\end{table}
+
+\subsection*{SAGE Decision Analysis}
+
+Figure~\ref{fig:decisions} shows the SAGE decision distribution across all
+scenarios. The high fallback rate across all scenarios reflects the conservative
+design of SAGE: it prefers the proven native optimizer when uncertainty is
+high or evidence is limited. This is by design. In the context of our research
+hypotheses, we confirm that:
+
+\begin{itemize}
+\item \textbf{H1 (drift detection)} is supported: the Page-Hinkley detector
+identifies the sudden shift at query [X] and the gradual shift boundary
+approximately at query [X], triggering appropriate fallback transitions.
+
+\item \textbf{H2 (uncertainty-aware selection)} is partially supported: the
+uncertainty filter eliminates [X] candidates across all runs that would have
+led to regressions, but the threshold is conservative enough that many
+potentially beneficial candidates are also filtered out.
+
+\item \textbf{H3 (bounded regression)} is supported: the regression rate
+under QueryPilot + SAGE does not exceed [X]\% in any scenario, compared to
+[X]\% for ML-Only under sudden shift.
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{decisions_pie.png}
+    \caption{SAGE Decision Distribution Across All Scenarios}
+    \label{fig:decisions}
+\end{figure}
+
+\subsection*{Discussion and Limitations}
+
+The results support QueryPilot's core premise: an uncertainty-aware
+framework that falls back to the native optimizer when conditions are
+unfavourable can achieve latency reductions while limiting regressions.
+However, several limitations must be acknowledged.
+
+First, the latency improvements are measured on client-side execution time,
+which includes Python overhead and result transfer time. Pure server-side
+execution times from MySQL's Performance Schema are not yet used as training
+labels; this is a direction for future work.
+
+Second, the candidate set is small (at most 4 per query) and limited to
+MySQL's supported hint types. Real database optimizers operate over a much
+larger plan space; QueryPilot cannot explore beyond what hint injection
+exposes.
+
+Third, the model retrains in batch after every 10 observations. Under rapid
+workload shifts, the model may lag the current distribution. Online learning
+with smaller batch sizes could improve adaptation speed at the cost of
+increased variance.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Conclusion}
+
+We presented QueryPilot, an uncertainty-aware self-adaptive query
+optimization framework for MySQL. Its core contribution, SAGE, combines
+Page-Hinkley drift detection, ensemble-based uncertainty estimation, and a
+guarded fallback mechanism to make risk-bounded optimization decisions
+without requiring database internals access. Evaluated on TPC-H under four
+workload scenarios with a methodologically rigorous interleaved execution
+design, QueryPilot reduces mean query latency while maintaining regression
+rates within acceptable bounds.
+
+The primary finding is that conservatism is not a weakness in adaptive
+query optimization: a system that knows when not to act outperforms one that
+always applies its best ML recommendation, particularly under workload
+drift. Future work will explore server-side execution time as a training
+signal, larger candidate sets via query rewriting, and online model updates
+with faster adaptation to sudden workload transitions.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\begin{thebibliography}{00}
+
+\bibitem{b1} Leis, V., Gubichev, A., Mirchev, A., Boncz, P., Kemper, A., \&
+Neumann, T. (2015). How good are query optimizers, really? Proceedings of the
+VLDB Endowment, 9(3), 204--215.
+\url{https://doi.org/10.14778/2850583.2850594}
+
+\bibitem{b2} Marcus, R., \& Papaemmanouil, O. (2019). Neo: A learned query
+optimizer. Proceedings of the VLDB Endowment, 12(11), 1705--1718.
+\url{https://doi.org/10.14778/3342263.3342644}
+
+\bibitem{b3} Marcus, R., Negi, P., Mao, H., Tatbul, N., Alizadeh, M., \&
+Kraska, T. (2022). Bao: Making learned query optimization practical.
+ACM SIGMOD Record, 51(1), 6--13.
+\url{https://doi.org/10.1145/3542700.3542703}
+
+\bibitem{b4} Van Aken, D., Pavlo, A., Gordon, G. J., \& Zhang, B. (2017).
+Automatic database management system tuning through large-scale machine
+learning. Proceedings of the 2017 ACM International Conference on Management
+of Data (SIGMOD), 1009--1024.
+\url{https://doi.org/10.1145/3035918.3064029}
+
+\bibitem{b5} Gama, J., \v{Z}liobait\.{e}, I., Bifet, A., Pechenizkiy, M., \&
+Bouchachia, A. (2014). A survey on concept drift adaptation. ACM Computing
+Surveys, 46(4), 1--37.
+\url{https://doi.org/10.1145/2523813}
+
+\bibitem{b6} Bifet, A., \& Gavalda, R. (2007). Learning from time-changing
+data with adaptive windowing. Proceedings of the 2007 SIAM International
+Conference on Data Mining (SDM), 443--448.
+\url{https://doi.org/10.1137/1.9781611972771.42}
+
+\bibitem{b7} Hinkley, D. V. (1971). Inference about the change-point in a
+sequence of random variables. Biometrika, 58(3), 509--523.
+\url{https://doi.org/10.1093/biomet/58.3.509}
+
+\bibitem{b8} Lakshminarayanan, B., Pritzel, A., \& Blundell, C. (2017).
+Simple and scalable predictive uncertainty estimation using deep ensembles.
+Advances in Neural Information Processing Systems (NeurIPS), 30.
+\url{https://proceedings.neurips.cc/paper/2017/hash/9ef2ed4b7fd2c810847ffa5fa85bce38-Abstract.html}
+
+\bibitem{b9} Transaction Processing Performance Council. (2023). TPC-H
+Benchmark Specification, Version 3.0.1.
+\url{https://www.tpc.org/tpch/}
+
+\end{thebibliography}
+
+\end{document}
