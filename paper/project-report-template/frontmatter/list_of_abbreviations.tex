@@ -9,49 +9,44 @@
 \addcontentsline{toc}{chapter}{LIST OF ABBREVIATIONS}
 
 \begin{center}
-  \vspace*{0.5cm}
+  \vspace*{0.3cm}
   {\SubTitleSize\bfseries LIST OF ABBREVIATIONS\par}
 \end{center}
 
-\vspace{0.5cm}
+\vspace{0.4cm}
 
-\begin{center}
-\begin{tabular}{@{}l@{\hspace{3em}}l@{}}
-  \textbf{ABBREVIATION} & \textbf{FULL FORM} \\[0.5cm]
-  BKA     & Batched Key Access \\[0.3cm]
-  BNL     & Block Nested Loop \\[0.3cm]
-  CSV     & Comma-Separated Values \\[0.3cm]
-  DBMS    & Database Management System \\[0.3cm]
-  EXPLAIN & MySQL Query Execution Plan Analysis Command \\[0.3cm]
-  GB      & Gradient Boosting \\[0.3cm]
-  IDE     & Integrated Development Environment \\[0.3cm]
-  JSON    & JavaScript Object Notation \\[0.3cm]
-  LR      & Linear Regression \\[0.3cm]
-  ML      & Machine Learning \\[0.3cm]
-  ms      & Milliseconds \\[0.3cm]
-  P95     & 95th Percentile Latency \\[0.3cm]
-  RF      & Random Forest \\[0.3cm]
-  SAGE    & Stability-Aware Guarded Execution \\[0.3cm]
-  SDK     & Software Development Kit \\[0.3cm]
-  SF      & Scale Factor \\[0.3cm]
-  SQL     & Structured Query Language \\[0.3cm]
-  TPC-H   & Transaction Processing Performance Council Benchmark H \\[0.3cm]
-\end{tabular}
-\end{center}
+% longtable allows natural page breaks if content overflows
+\begin{longtable}{@{}p{4cm}@{\hspace{1cm}}p{9cm}@{}}
+  \textbf{ACRONYM} & \textbf{ABBREVIATION} \\[0.3cm]
 
-\vspace{1cm}
+  BKA     & Batched Key Access \\[0.2cm]
+  BNL     & Block Nested Loop \\[0.2cm]
+  CSV     & Comma-Separated Values \\[0.2cm]
+  DBMS    & Database Management System \\[0.2cm]
+  EXPLAIN & MySQL Query Execution Plan Analysis Command \\[0.2cm]
+  GB      & Gradient Boosting \\[0.2cm]
+  IDE     & Integrated Development Environment \\[0.2cm]
+  JSON    & JavaScript Object Notation \\[0.2cm]
+  LR      & Linear Regression \\[0.2cm]
+  ML      & Machine Learning \\[0.2cm]
+  ms      & Milliseconds \\[0.2cm]
+  P95     & 95th Percentile Latency \\[0.2cm]
+  RF      & Random Forest \\[0.2cm]
+  SAGE    & Stability-Aware Guarded Execution \\[0.2cm]
+  SDK     & Software Development Kit \\[0.2cm]
+  SF      & Scale Factor \\[0.2cm]
+  SQL     & Structured Query Language \\[0.2cm]
+  TPC-H   & Transaction Processing Performance Council Benchmark H \\[0.4cm]
 
-\begin{center}
-\begin{tabular}{@{}l@{\hspace{3em}}l@{}}
-  \textbf{SYMBOL} & \textbf{DESCRIPTION} \\[0.5cm]
-  $\delta$        & Page-Hinkley sensitivity parameter (0.005) \\[0.3cm]
-  $\lambda$       & Page-Hinkley threshold parameter (25) \\[0.3cm]
-  $\mu(x)$        & Mean prediction of the ensemble for feature vector $x$ \\[0.3cm]
-  $n_{min}$       & Minimum evidence queries before model makes decisions (10) \\[0.3cm]
-  $PH_n$          & Page-Hinkley statistic at query $n$ \\[0.3cm]
-  $\sigma(x)$     & Standard deviation of ensemble predictions for feature vector $x$ \\[0.3cm]
-  $\tau_r$        & Regression tolerance threshold (0.15) \\[0.3cm]
-  $\tau_u$        & Uncertainty threshold (0.8) \\[0.3cm]
-  $u(x)$          & Relative uncertainty estimate: $\sigma(x) / \mu(x)$ \\[0.3cm]
-\end{tabular}
-\end{center}
+  \multicolumn{2}{@{}l@{}}{\textbf{SYMBOL} \hspace{1cm} \textbf{DESCRIPTION}} \\[0.3cm]
+
+  $\delta$    & Page-Hinkley sensitivity parameter (0.005) \\[0.2cm]
+  $\lambda$   & Page-Hinkley threshold parameter (25) \\[0.2cm]
+  $\mu(x)$    & Mean prediction of the ensemble for feature vector $x$ \\[0.2cm]
+  $n_{min}$   & Minimum evidence queries before model makes decisions (10) \\[0.2cm]
+  $PH_n$      & Page-Hinkley statistic at query $n$ \\[0.2cm]
+  $\sigma(x)$ & Standard deviation of ensemble predictions for $x$ \\[0.2cm]
+  $\tau_r$    & Regression tolerance threshold (0.15) \\[0.2cm]
+  $\tau_u$    & Uncertainty threshold (0.8) \\[0.2cm]
+  $u(x)$      & Relative uncertainty: $\sigma(x) / \mu(x)$ \\[0.2cm]
+\end{longtable}
