@@ -1,0 +1,32 @@
+flowchart TD
+    A(["`**Receive SQL Query**`"]) --> B["Generate Candidates\nnative · NO_INDEX · HASH_JOIN · NO_BKA"]
+    B --> C["Extract Features\nvia EXPLAIN"]
+    C --> D{{"queries_seen\n≥ n_min?"}}
+
+    D -->|No| E["**GATHER EVIDENCE**\nRun native SQL\nRecord execution time"]
+    D -->|Yes| F{{"Drift\nDetected?"}}
+
+    F -->|Yes| G["**FALLBACK**\nRun native SQL\nClear training buffer"]
+    F -->|No| H["Predict performance\nfor each candidate\n(mean, std)"]
+
+    H --> I{{"Any candidate passes\nuncertainty ≤ τᵤ AND\npredicted time ≤ native × 1.15?"}}
+
+    I -->|No| J["**FALLBACK**\nRun native SQL"]
+    I -->|Yes| K["**ADAPT**\nRun best candidate"]
+
+    E --> L["Record actual time\nUpdate drift detector\nAdd to training buffer"]
+    G --> L
+    J --> L
+    K --> L
+
+    L --> M{{"Buffer\n≥ 10 samples?"}}
+    M -->|Yes| N["Retrain ensemble model"]
+    M -->|No| O(["`**Return Query Results**`"])
+    N --> O
+
+    style E fill:#4a90d9,stroke:#357abd,color:#fff
+    style G fill:#e74c3c,stroke:#c0392b,color:#fff
+    style J fill:#e74c3c,stroke:#c0392b,color:#fff
+    style K fill:#27ae60,stroke:#1e8449,color:#fff
+    style A fill:#f5a623,stroke:#e09415,color:#000
+    style O fill:#f5a623,stroke:#e09415,color:#000

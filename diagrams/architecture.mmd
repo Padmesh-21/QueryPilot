@@ -1,0 +1,26 @@
+flowchart TD
+    A(["`**SQL Query Input**`"]) --> B
+
+    B["**1. Workload Collector**\nLogs query + metadata"]
+    B --> C["**2. Feature Extractor**\n8 features from EXPLAIN"]
+    C --> D["**3. Candidate Generator**\nnative · NO_INDEX · HASH_JOIN · NO_BKA"]
+    D --> E["**4. Performance Model**\nLinear Reg · Random Forest · Gradient Boost"]
+    E --> F["**5. Uncertainty Estimator**\nu(x) = σ(x) / μ(x)"]
+    F --> G["**6. Drift Detector**\nPage-Hinkley Test"]
+    G --> H{{"**7. SAGE Controller**"}}
+
+    H -->|adapt| I["**8. Execution Layer**\nExecute selected SQL"]
+    H -->|gather_evidence| I
+    H -->|fallback| I
+
+    I --> J[("**MySQL Database**")]
+    J --> K["**9. Feedback Collector**\nUpdates training buffer"]
+    K --> E
+
+    J --> L(["`**Query Results**`"])
+    K --> M["**10. Streamlit Dashboard**\nLatency · Decisions · Drift · Uncertainty"]
+
+    style H fill:#f5a623,stroke:#e09415,color:#000
+    style J fill:#4a90d9,stroke:#357abd,color:#fff
+    style A fill:#27ae60,stroke:#1e8449,color:#fff
+    style L fill:#27ae60,stroke:#1e8449,color:#fff

@@ -1,0 +1,22 @@
+flowchart TD
+    A(["`**New Query Executed**`"]) --> B["Record actual execution\ntime x_t"]
+    B --> C["Update running mean x̄_t\nwith decay α = 0.9999"]
+    C --> D["Compute Page-Hinkley\nincrement:\nx_t - x̄_t - δ"]
+    D --> E["Update cumulative sum:\nPH_n = PH_{n-1} + increment"]
+    E --> F["Track minimum:\nm_n = min(PH_1 ... PH_n)"]
+    F --> G{{"PH_n - m_n > λ ?"}}
+
+    G -->|No — no drift| H["Continue normal operation\nModel predictions trusted"]
+    G -->|Yes — drift detected| I["**DRIFT SIGNAL RAISED**\nStore drift_active = True"]
+
+    I --> J["On next query:\nSAGE enters FALLBACK mode"]
+    J --> K["Clear training buffer\nStop ML recommendations"]
+    K --> L["Reset PH detector\nBegin collecting new data"]
+    L --> M(["`**Resume gather_evidence phase**`"])
+
+    H --> N(["`**Continue to SAGE decision**`"])
+
+    style I fill:#e74c3c,stroke:#c0392b,color:#fff
+    style A fill:#4a90d9,stroke:#357abd,color:#fff
+    style M fill:#27ae60,stroke:#1e8449,color:#fff
+    style N fill:#27ae60,stroke:#1e8449,color:#fff

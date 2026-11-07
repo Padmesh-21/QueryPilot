@@ -1,0 +1,16 @@
+flowchart TD
+    A(["`**Incoming SQL Query**`"]) --> B["**Step 1: Workload Collector**\nRecord query text + timestamp"]
+    B --> C["**Step 2: Feature Extractor**\nRun EXPLAIN · Extract 8 features\n(joins, tables, rows, index usage...)"]
+    C --> D["**Step 3: Candidate Generator**\nInject optimizer hints\nnative · NO_INDEX · HASH_JOIN · NO_BKA"]
+    D --> E["**Step 4: Performance Prediction**\nEnsemble model predicts execution\ntime for each candidate"]
+    E --> F["**Step 5: Uncertainty Estimation**\nu(x) = σ(x) / μ(x) per candidate"]
+    F --> G["**Step 6: Drift Detection**\nPage-Hinkley test on execution\ntime stream"]
+    G --> H["**Step 7: SAGE Decision**\ngather_evidence · adapt · fallback"]
+    H --> I["**Step 8: Query Execution**\nExecute selected SQL via\nmysql-connector-python"]
+    I --> J["**Step 9: Feedback Collection**\nRecord actual latency\nLog decision to CSV"]
+    J --> K["**Step 10: Model Update**\nAdd to training buffer\nRetrain ensemble if buffer ≥ 10"]
+    K --> L(["`**Return Results to Application**`"])
+
+    style A fill:#27ae60,stroke:#1e8449,color:#fff
+    style L fill:#27ae60,stroke:#1e8449,color:#fff
+    style H fill:#f5a623,stroke:#e09415,color:#000
