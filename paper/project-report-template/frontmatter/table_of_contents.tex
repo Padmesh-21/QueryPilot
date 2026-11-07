@@ -1,0 +1,27 @@
+% =========================================================
+% TABLE OF CONTENTS
+% =========================================================
+% Source: UG_REPORT_FORMAT.pdf §3.4, Appendix 3
+%
+% FORMAT REQUIREMENTS:
+%   - 1.5 line spacing (handled by global setting)
+%   - Heading: "TABLE OF CONTENTS"
+%   - Column layout: CHAPTER NO. | TITLE | PAGE NO.
+%   - Title page and Bonafide Certificate NOT listed
+%   - Front matter pages use lowercase Roman numerals
+%   - Entries in CAPITAL LETTERS (handled by \MakeUppercase
+%     in chapter/section definitions in formatting.tex)
+%
+% This file simply generates the TOC automatically.
+% LaTeX builds it from \chapter and \section commands.
+% You do NOT need to edit this file manually.
+%
+% NOTE: You may need to compile TWICE for the TOC to
+% be fully up to date (this is normal LaTeX behavior).
+% =========================================================
+
+\clearpage
+\thispagestyle{plain}
+
+% Generate the Table of Contents
+\tableofcontents

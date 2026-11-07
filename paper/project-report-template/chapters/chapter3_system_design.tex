@@ -1,0 +1,146 @@
+% =========================================================
+% CHAPTER 3: SYSTEM DESIGN
+% =========================================================
+
+\chapter{SYSTEM DESIGN}
+\label{chap:system_design}
+
+The design of QueryPilot is organized around a sequential pipeline that
+processes each incoming SQL query through a series of well-defined stages,
+from initial receipt to final execution and feedback collection. This chapter
+describes the flow of control and data through the system using three
+complementary flow diagrams: the overall QueryPilot execution flow, the SAGE
+decision flow, and the workload drift detection flow.
+
+\section{FLOW DIAGRAMS}
+\label{sec:flow_diagrams}
+
+The system design is best understood through three flows, each representing a
+distinct operational dimension of QueryPilot. The execution flow describes the
+end-to-end path of a single query. The SAGE decision flow describes the logic
+by which the decision controller selects an action. The drift detection flow
+describes how the Page-Hinkley detector is updated and how a detected shift
+triggers a response.
+
+\subsection{QueryPilot Execution Flow}
+\label{subsec:execution_flow}
+
+The QueryPilot execution flow describes the complete sequence of operations
+performed for every incoming SQL query. The flow is sequential and consists of
+ten stages. In the first stage, the Workload Collector receives the SQL query
+from the application and records its arrival metadata. In the second stage,
+the Feature Extractor runs MySQL's EXPLAIN command on the query and extracts
+eight structural features from the resulting execution plan. In the third
+stage, the Candidate Generator injects supported optimizer hints into the
+original query to produce up to four candidate variants. In the fourth stage,
+the Performance Prediction Model predicts the expected execution time for each
+candidate using the trained ensemble. In the fifth stage, the Uncertainty
+Estimator computes the relative ensemble disagreement for each prediction. In
+the sixth stage, the Drift Detector checks whether the global Page-Hinkley
+statistic signals a workload shift. In the seventh stage, SAGE applies its
+decision logic to select the best candidate or fall back to the native query.
+In the eighth stage, the Execution Layer issues the selected SQL to MySQL and
+measures client-side latency. In the ninth stage, the Feedback Collector
+records the actual execution time and appends it to the training buffer. In the
+tenth and final stage, the model retrains if the buffer has reached the minimum
+evidence threshold, completing one full iteration of the adaptive loop.
+
+As shown in \figref{fig:execution_flow}, the ten stages form a closed loop
+where each query's outcome feeds back into the learning and monitoring
+components for subsequent queries.
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\parbox{0.85\textwidth}{%
+    \centering
+    \vspace{1.5cm}
+    \textbf{Figure Placeholder}\\[0.3cm]
+    QueryPilot Execution Flow\\
+    (Replace with actual flow diagram image)
+    \vspace{1.5cm}
+  }}
+  \caption{QueryPilot Execution Flow: Ten-Stage Pipeline}
+  \label{fig:execution_flow}
+\end{figure}
+
+The flow diagram in \figref{fig:execution_flow} illustrates how a query enters
+the system, traverses the pipeline, and returns results to the calling
+application while simultaneously updating the learning and monitoring state.
+
+\subsection{SAGE Decision Flow}
+\label{subsec:sage_flow}
+
+The SAGE decision flow describes the logic executed by the Stability-Aware
+Guarded Execution controller for every incoming query after feature extraction
+and candidate generation. SAGE applies three sequential checks. In the first
+check, SAGE evaluates whether the performance model is trained and whether the
+system has seen at least $n_{min} = 10$ queries. If either condition is not
+met, SAGE selects the \textit{gather evidence} action: the native query is
+executed and its result is recorded. No optimization is attempted. In the
+second check, SAGE evaluates whether the drift detector has flagged an active
+workload shift. If drift is detected, SAGE selects the \textit{fallback}
+action: the native query is executed, and the training buffer is cleared to
+prevent the stale model from being used for future decisions. In the third
+check, which applies only when the model is trained and no drift is active,
+SAGE evaluates each candidate. Candidates whose relative uncertainty
+$u(x) = \sigma(x)/\mu(x)$ exceeds $\tau_u = 0.8$ are excluded. Candidates
+whose predicted mean exceeds the native predicted mean by more than
+$\tau_r = 0.15$ (15\%) are also excluded. If a non-native candidate survives
+both filters and is predicted to be faster than native, SAGE selects the
+\textit{adapt} action. Otherwise, SAGE selects \textit{fallback}.
+
+The decision flow is shown in \figref{fig:sage_flow}.
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\parbox{0.85\textwidth}{%
+    \centering
+    \vspace{1.5cm}
+    \textbf{Figure Placeholder}\\[0.3cm]
+    SAGE Decision Flow\\
+    (Replace with actual flowchart image)
+    \vspace{1.5cm}
+  }}
+  \caption{SAGE Decision Flow: Adapt, Gather Evidence, and Fallback Paths}
+  \label{fig:sage_flow}
+\end{figure}
+
+As shown in \figref{fig:sage_flow}, the three-branch structure ensures that
+SAGE never takes an action it cannot justify with sufficient evidence and
+acceptable uncertainty.
+
+\subsection{Workload Drift Detection Flow}
+\label{subsec:drift_flow}
+
+The workload drift detection flow describes how the Page-Hinkley detector is
+updated and how a detected shift triggers SAGE's fallback response. After every
+query execution, the actual execution time in milliseconds is passed to the
+WorkloadDriftDetector. The detector maintains two sets of Page-Hinkley
+statistics: one global detector across all queries, and one per-query detector
+keyed by the first 60 characters of the query signature. The global detector
+is updated with the new execution time. The Page-Hinkley statistic
+$PH_n = \sum_{t=1}^{n}(x_t - \bar{x}_t - \delta) - \min_{1 \le t \le n}
+\sum$ is incremented. If $PH_n$ exceeds the threshold $\lambda = 25$, the
+detector returns True, signalling drift. On the next query execution, SAGE
+reads this drift flag. If the flag is True, SAGE clears the training buffer,
+resets to gather-evidence mode, and clears the drift flag. The detector
+continues to accumulate statistics on subsequent queries.
+
+The drift detection flow is illustrated in \figref{fig:drift_flow}.
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\parbox{0.85\textwidth}{%
+    \centering
+    \vspace{1.5cm}
+    \textbf{Figure Placeholder}\\[0.3cm]
+    Workload Drift Detection Flow\\
+    (Replace with actual flowchart image)
+    \vspace{1.5cm}
+  }}
+  \caption{Workload Drift Detection Flow: Page-Hinkley Update and Trigger}
+  \label{fig:drift_flow}
+\end{figure}
+
+As illustrated in \figref{fig:drift_flow}, drift detection operates as a
+continuous background process that gates SAGE's adaptation decisions.

@@ -1,0 +1,219 @@
+% =========================================================
+%
+%  ANNA UNIVERSITY B.E. / B.TECH. PROJECT REPORT TEMPLATE
+%
+%  A reusable LaTeX template following the official
+%  Anna University (Chennai 600 025) formatting guidelines
+%  for undergraduate project reports.
+%
+%  Compiler:   XeLaTeX (required for Times New Roman font)
+%  Created:    November 2026
+%  Version:    1.0
+%
+% =========================================================
+%
+%  HOW TO COMPILE (Overleaf):
+%    1. Upload this entire folder to Overleaf as a new project.
+%    2. Go to Menu → Compiler → Select "XeLaTeX".
+%    3. Click "Recompile" (or Ctrl+Enter).
+%    4. Compile TWICE for Table of Contents and references
+%       to update correctly.
+%
+%  HOW TO COMPILE (Local):
+%    xelatex main.tex
+%    bibtex main
+%    xelatex main.tex
+%    xelatex main.tex
+%
+% =========================================================
+%
+%  QUICK START — To customize this template for your project:
+%    1. Edit config/metadata.tex — fill in your project details.
+%    2. Place your logo files in the figures/ folder.
+%    3. Edit frontmatter/abstract.tex — write your abstract.
+%    4. Edit frontmatter/acknowledgement.tex — update names.
+%    5. Edit chapters/ files — write your chapter content.
+%    6. Edit bibliography.bib — add your references.
+%    7. Edit frontmatter/list_of_abbreviations.tex — add yours.
+%    8. Compile and review.
+%
+% =========================================================
+
+% ---------------------------------------------------------
+% DOCUMENT CLASS
+% ---------------------------------------------------------
+% 'report' class: provides chapter-level organization.
+% '12pt': base font size. We override this to 14pt in
+%   config/formatting.tex using \renewcommand{\normalsize}.
+% 'a4paper': A4 page size (mandatory per AU guidelines).
+% 'oneside': single-sided printing (standard for project reports).
+%
+% NOTE: We use 12pt as the class option because LaTeX's report
+% class does not natively support 14pt. The actual 14pt size is
+% set in formatting.tex via \fontsize{14}{21}\selectfont.
+% DO NOT CHANGE to 10pt or 11pt.
+% ---------------------------------------------------------
+\documentclass[12pt, a4paper, oneside]{report}
+
+% ---------------------------------------------------------
+% LOAD CONFIGURATION FILES
+% ---------------------------------------------------------
+% These files must be loaded in this exact order:
+%   1. metadata.tex — project-specific information
+%   2. packages.tex — all package imports
+%   3. formatting.tex — page layout, fonts, spacing, headings
+%   4. commands.tex — custom commands and shortcuts
+% ---------------------------------------------------------
+
+% Step 1: Project metadata (must be loaded FIRST because
+% other files reference these commands)
+\input{config/metadata}
+
+% Step 2: Package imports
+\input{config/packages}
+
+% Step 3: Formatting rules (margins, fonts, spacing, etc.)
+\input{config/formatting}
+
+% Step 4: Custom commands and shortcuts
+\input{config/commands}
+
+% =========================================================
+% BEGIN DOCUMENT
+% =========================================================
+\begin{document}
+
+% =========================================================
+% FRONT MATTER
+% =========================================================
+% Front matter uses lowercase Roman numeral page numbering
+% (i, ii, iii, iv, ...).
+%
+% The sequence follows the official Anna University format:
+%   1. Title Page (no page number displayed)
+%   2. Bonafide Certificate
+%   3. Certificate of Evaluation (optional — college-specific)
+%   4. Acknowledgement (optional — but commonly included)
+%   5. Abstract
+%   6. Table of Contents
+%   7. List of Figures
+%   8. List of Tables
+%   9. List of Abbreviations
+%
+% HOW TO ADD/REMOVE FRONT MATTER PAGES:
+%   - To remove a page: comment out its \input line below.
+%   - To add a new page: create a .tex file in frontmatter/
+%     and add an \input line here in the correct position.
+% =========================================================
+
+% --- Title Page ---
+% (no page number displayed — handled inside title_page.tex)
+\input{frontmatter/title_page}
+
+% --- Begin Roman numeral page numbering ---
+% Page counting starts from the title page, but numbers are
+% only displayed from the certificate page onwards.
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+% --- Bonafide Certificate ---
+\input{frontmatter/certificate}
+
+% --- Acknowledgement (OPTIONAL but commonly included) ---
+\input{frontmatter/acknowledgement}
+
+% --- Certificate of Evaluation (OPTIONAL) ---
+% This is NOT in the official AU format but is commonly required.
+% Comment out the line below if your college does not require it.
+\input{frontmatter/certificate_of_evaluation}
+
+% --- Declaration (OPTIONAL) ---
+% This is NOT in the official AU format or sample report.
+% Uncomment the line below if your college requires it.
+% \input{frontmatter/declaration}
+
+% --- Abstract (MANDATORY) ---
+\input{frontmatter/abstract}
+
+% --- Table of Contents ---
+\input{frontmatter/table_of_contents}
+
+% --- List of Figures ---
+\input{frontmatter/list_of_figures}
+
+% --- List of Tables ---
+\input{frontmatter/list_of_tables}
+
+% --- List of Abbreviations ---
+\input{frontmatter/list_of_abbreviations}
+
+% =========================================================
+% MAIN MATTER (CHAPTERS)
+% =========================================================
+% Main matter uses Arabic numeral page numbering (1, 2, 3...).
+% Page numbering resets to 1 at the start of Chapter 1.
+%
+% Chapter sequence follows the department guidelines:
+%   Chapter 1: Introduction
+%   Chapter 2: Literature Survey
+%   Chapter 3: System Design
+%   Chapter 4: System Architecture
+%   Chapter 5: System Implementation
+%   Chapter 6: Results and Coding
+%   Chapter 7: Conclusion and Future Work
+%
+% HOW TO ADD A NEW CHAPTER:
+%   1. Create a new .tex file in the chapters/ folder.
+%   2. Start the file with \chapter{Your Chapter Title}
+%   3. Add an \input line below in the correct position.
+%   4. Recompile twice to update the Table of Contents.
+%
+% HOW TO REMOVE A CHAPTER:
+%   Comment out or delete its \input line below.
+% =========================================================
+
+% --- Switch to Arabic page numbering ---
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% --- Chapter 1: Introduction ---
+\input{chapters/chapter1_introduction}
+
+% --- Chapter 2: Literature Survey ---
+\input{chapters/chapter2_literature_survey}
+
+% --- Chapter 3: System Design ---
+\input{chapters/chapter3_system_design}
+
+% --- Chapter 4: System Architecture ---
+\input{chapters/chapter4_system_architecture}
+
+% --- Chapter 5: System Implementation ---
+\input{chapters/chapter5_implementation}
+
+% --- Chapter 6: Results and Coding ---
+\input{chapters/chapter6_results_and_coding}
+
+% --- Chapter 7: Conclusion and Future Work ---
+\input{chapters/chapter7_conclusion}
+
+% =========================================================
+% BACK MATTER
+% =========================================================
+% The back matter includes:
+%   - References (MANDATORY)
+%   - Appendices (optional)
+% =========================================================
+
+% --- References ---
+\input{backmatter/references}
+
+% --- Appendices (OPTIONAL) ---
+% Comment out the line below if you have no appendices.
+\input{backmatter/appendices}
+
+% =========================================================
+% END DOCUMENT
+% =========================================================
+\end{document}

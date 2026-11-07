@@ -2,6 +2,52 @@
 
 ---
 
+# LIST OF SYMBOLS, ABBREVIATIONS AND NOMENCLATURE
+
+| Abbreviation | Full Form |
+|---|---|
+| SAGE | Stability-Aware Guarded Execution |
+| ML | Machine Learning |
+| SQL | Structured Query Language |
+| DBMS | Database Management System |
+| TPC-H | Transaction Processing Performance Council Benchmark H |
+| EXPLAIN | MySQL query execution plan analysis command |
+| P95 | 95th Percentile Latency |
+| BKA | Batched Key Access |
+| BNL | Block Nested Loop |
+| DQN | Deep Q-Network |
+| RF | Random Forest |
+| GB | Gradient Boosting |
+| LR | Linear Regression |
+| CSV | Comma-Separated Values |
+| JSON | JavaScript Object Notation |
+| API | Application Programming Interface |
+| SDK | Software Development Kit |
+| ORM | Object-Relational Mapping |
+| CPU | Central Processing Unit |
+| RAM | Random Access Memory |
+| IDE | Integrated Development Environment |
+| VS Code | Visual Studio Code |
+| GUI | Graphical User Interface |
+| ms | Milliseconds |
+| SF | Scale Factor |
+
+**Nomenclature**
+
+| Symbol | Description |
+|---|---|
+| μ(x) | Mean prediction of the ensemble for feature vector x |
+| σ(x) | Standard deviation of ensemble predictions for feature vector x |
+| u(x) | Relative uncertainty estimate: σ(x) / μ(x) |
+| τ_u | Uncertainty threshold (default: 0.8) |
+| τ_r | Regression tolerance (default: 0.15) |
+| n_min | Minimum evidence queries before model makes decisions (default: 8) |
+| PH_n | Page-Hinkley statistic at query n |
+| δ | Page-Hinkley sensitivity parameter (default: 0.005) |
+| λ | Page-Hinkley threshold parameter (default: 25) |
+
+---
+
 # CHAPTER 1 – INTRODUCTION
 
 Modern database systems are central to nearly every software application, from e-commerce platforms to enterprise analytics pipelines. The efficiency with which a database executes SQL queries directly affects application responsiveness, server resource consumption, and ultimately the user experience. Among the many factors that determine query efficiency, the choice of execution plan made by the query optimizer is one of the most consequential. A well-chosen plan can execute a query in milliseconds; a poor one can take seconds or minutes on the same data.

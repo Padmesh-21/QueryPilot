@@ -1,0 +1,67 @@
+% =========================================================
+% CHAPTER 7: CONCLUSION AND FUTURE WORK
+% =========================================================
+% IMPORTANT: No sections or subsections allowed in Chapter 7.
+% Paragraphs only, per Anna University guidelines.
+% =========================================================
+
+\chapter{CONCLUSION AND FUTURE WORK}
+\label{chap:conclusion}
+
+This project presented QueryPilot, an uncertainty-aware self-adaptive query
+optimization framework for MySQL 8.0. The system was implemented as a Python
+middleware that intercepts SQL queries, extracts structural features from
+MySQL's EXPLAIN output, generates optimizer hint candidates, predicts their
+performance using a three-model ensemble of Linear Regression, Random Forest,
+and Gradient Boosting regressors, estimates prediction uncertainty through
+ensemble disagreement, detects workload drift using the Page-Hinkley
+sequential change-point test, and makes bounded-risk execution decisions
+through the SAGE (Stability-Aware Guarded Execution) controller. The framework
+was evaluated on the TPC-H benchmark at scale factor 1 under four controlled
+workload scenarios using a methodologically rigorous interleaved execution
+design that eliminates buffer pool warm-up bias. A real-time Streamlit
+dashboard was built to visualize query performance, SAGE decisions, drift
+detection events, and cross-scenario experiment comparisons.
+
+The primary finding of this project is that conservative, uncertainty-aware
+adaptation prevents the performance regressions that unconstrained ML-based
+optimization introduces under dynamic workload conditions. QueryPilot + SAGE
+achieved a regression rate of 0.0 percent in all four evaluated scenarios,
+compared to regression rates of 10.0 to 14.0 percent for the ML-Only baseline
+under the stable, sudden shift, and gradual shift scenarios. The per-query
+overhead of QueryPilot's pipeline ranged from 3.21 to 5.86 milliseconds on
+queries averaging 18 to 22 seconds in duration, representing less than 0.03
+percent of total query time. These results confirm that a system that knows
+when not to override the native optimizer is more reliable under workload
+dynamics than one that always applies its best machine learning recommendation.
+
+Several limitations of the current implementation must be acknowledged. First,
+execution times are measured on the client side using Python's
+time.perf\_counter, which includes result fetching and Python overhead in
+addition to server-side query processing time. Server-side execution times
+from MySQL's Performance Schema would provide a cleaner signal for the training
+labels and are not used in the current version. Second, the candidate set is
+small and restricted to three hint types supported by MySQL's optimizer hint
+system. The available hint candidates (NO\_INDEX, HASH\_JOIN, NO\_BKA) do not
+reliably outperform native execution on TPC-H with properly configured indexes,
+which is why SAGE made zero adapt decisions across all scenarios. The
+framework architecture is correct and the safety mechanisms work as intended,
+but expanding the candidate pool to include more powerful hints would be
+necessary for the system to demonstrate positive adaptations. Third, the model
+retrains in batch after every ten observations, which may cause the model to
+lag the current workload distribution under rapid shifts.
+
+Future work on QueryPilot will focus on four directions. First, the candidate
+generation strategy will be extended to include FORCE INDEX hints targeting
+specific named indexes, JOIN ORDER hints for controlling multi-table join
+order, and query rewriting strategies such as subquery-to-join transformations.
+These hint types can provide genuine performance improvements on MySQL and
+would give SAGE meaningful candidates to evaluate. Second, server-side
+execution times from MySQL's Performance Schema will be used as training labels
+to produce a cleaner signal for the performance prediction model. Third, the
+evaluation will be extended to larger TPC-H scale factors (scale factor 10 and
+scale factor 100) to characterize QueryPilot's behaviour on datasets where
+MySQL's optimizer is more likely to make suboptimal decisions. Fourth, the
+Python SDK will be extended to a transparent MySQL wire-protocol proxy,
+allowing QueryPilot to intercept queries from any application without requiring
+code changes.

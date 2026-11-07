@@ -1,0 +1,1043 @@
+{
+  "metrics": {
+    "scenario": "data_skew",
+    "n_queries": 50,
+    "seed": 42,
+    "methodology": "interleaved",
+    "native": {
+      "mean_ms": 17551.858,
+      "median_ms": 17462.554,
+      "p95_ms": 20118.951,
+      "total_ms": 877592.878,
+      "n_queries": 50
+    },
+    "ml_only": {
+      "mean_ms": 17423.288,
+      "median_ms": 17217.212,
+      "p95_ms": 19740.74,
+      "total_ms": 871164.397,
+      "n_queries": 50
+    },
+    "sage": {
+      "mean_ms": 17307.168,
+      "median_ms": 17157.319,
+      "p95_ms": 20168.991,
+      "total_ms": 865358.398,
+      "n_queries": 50
+    },
+    "sage_decisions": {
+      "adapt": 0,
+      "gather_evidence": 10,
+      "fallback": 40
+    },
+    "sage_regression_rate_pct": 0.0,
+    "ml_only_regression_rate_pct": 0.0,
+    "querypilot_overhead_ms": 3.88
+  },
+  "native_results": [
+    {
+      "index": 0,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 21287.129,
+      "decision": "native"
+    },
+    {
+      "index": 1,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19830.367,
+      "decision": "native"
+    },
+    {
+      "index": 2,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19589.808,
+      "decision": "native"
+    },
+    {
+      "index": 3,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19782.067,
+      "decision": "native"
+    },
+    {
+      "index": 4,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19510.169,
+      "decision": "native"
+    },
+    {
+      "index": 5,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19395.153,
+      "decision": "native"
+    },
+    {
+      "index": 6,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19193.57,
+      "decision": "native"
+    },
+    {
+      "index": 7,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19282.689,
+      "decision": "native"
+    },
+    {
+      "index": 8,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17888.261,
+      "decision": "native"
+    },
+    {
+      "index": 9,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18862.639,
+      "decision": "native"
+    },
+    {
+      "index": 10,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18627.139,
+      "decision": "native"
+    },
+    {
+      "index": 11,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 20118.951,
+      "decision": "native"
+    },
+    {
+      "index": 12,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16064.279,
+      "decision": "native"
+    },
+    {
+      "index": 13,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17656.009,
+      "decision": "native"
+    },
+    {
+      "index": 14,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17641.96,
+      "decision": "native"
+    },
+    {
+      "index": 15,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16959.853,
+      "decision": "native"
+    },
+    {
+      "index": 16,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17272.99,
+      "decision": "native"
+    },
+    {
+      "index": 17,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17985.107,
+      "decision": "native"
+    },
+    {
+      "index": 18,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18926.173,
+      "decision": "native"
+    },
+    {
+      "index": 19,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17851.965,
+      "decision": "native"
+    },
+    {
+      "index": 20,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17092.187,
+      "decision": "native"
+    },
+    {
+      "index": 21,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17116.702,
+      "decision": "native"
+    },
+    {
+      "index": 22,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17381.182,
+      "decision": "native"
+    },
+    {
+      "index": 23,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16965.987,
+      "decision": "native"
+    },
+    {
+      "index": 24,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17368.155,
+      "decision": "native"
+    },
+    {
+      "index": 25,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17017.65,
+      "decision": "native"
+    },
+    {
+      "index": 26,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16888.952,
+      "decision": "native"
+    },
+    {
+      "index": 27,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17462.554,
+      "decision": "native"
+    },
+    {
+      "index": 28,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 20372.037,
+      "decision": "native"
+    },
+    {
+      "index": 29,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19411.25,
+      "decision": "native"
+    },
+    {
+      "index": 30,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15562.953,
+      "decision": "native"
+    },
+    {
+      "index": 31,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15322.503,
+      "decision": "native"
+    },
+    {
+      "index": 32,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16301.322,
+      "decision": "native"
+    },
+    {
+      "index": 33,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16413.097,
+      "decision": "native"
+    },
+    {
+      "index": 34,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15949.255,
+      "decision": "native"
+    },
+    {
+      "index": 35,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17932.803,
+      "decision": "native"
+    },
+    {
+      "index": 36,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19377.454,
+      "decision": "native"
+    },
+    {
+      "index": 37,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18630.58,
+      "decision": "native"
+    },
+    {
+      "index": 38,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18856.284,
+      "decision": "native"
+    },
+    {
+      "index": 39,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17611.08,
+      "decision": "native"
+    },
+    {
+      "index": 40,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15718.994,
+      "decision": "native"
+    },
+    {
+      "index": 41,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15831.904,
+      "decision": "native"
+    },
+    {
+      "index": 42,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15449.518,
+      "decision": "native"
+    },
+    {
+      "index": 43,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15464.852,
+      "decision": "native"
+    },
+    {
+      "index": 44,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15529.516,
+      "decision": "native"
+    },
+    {
+      "index": 45,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15379.76,
+      "decision": "native"
+    },
+    {
+      "index": 46,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15589.225,
+      "decision": "native"
+    },
+    {
+      "index": 47,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15677.244,
+      "decision": "native"
+    },
+    {
+      "index": 48,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15078.45,
+      "decision": "native"
+    },
+    {
+      "index": 49,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15113.15,
+      "decision": "native"
+    }
+  ],
+  "ml_results": [
+    {
+      "index": 0,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 20233.265,
+      "decision": "ml_only"
+    },
+    {
+      "index": 1,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19740.74,
+      "decision": "ml_only"
+    },
+    {
+      "index": 2,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19518.791,
+      "decision": "ml_only"
+    },
+    {
+      "index": 3,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19608.896,
+      "decision": "ml_only"
+    },
+    {
+      "index": 4,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19482.614,
+      "decision": "ml_only"
+    },
+    {
+      "index": 5,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 20125.217,
+      "decision": "ml_only"
+    },
+    {
+      "index": 6,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18865.494,
+      "decision": "ml_only"
+    },
+    {
+      "index": 7,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17808.302,
+      "decision": "ml_only"
+    },
+    {
+      "index": 8,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18953.648,
+      "decision": "ml_only"
+    },
+    {
+      "index": 9,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18815.742,
+      "decision": "ml_only"
+    },
+    {
+      "index": 10,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19694.339,
+      "decision": "ml_only"
+    },
+    {
+      "index": 11,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17069.253,
+      "decision": "ml_only"
+    },
+    {
+      "index": 12,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16245.044,
+      "decision": "ml_only"
+    },
+    {
+      "index": 13,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17674.073,
+      "decision": "ml_only"
+    },
+    {
+      "index": 14,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17181.1,
+      "decision": "ml_only"
+    },
+    {
+      "index": 15,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16521.957,
+      "decision": "ml_only"
+    },
+    {
+      "index": 16,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17263.324,
+      "decision": "ml_only"
+    },
+    {
+      "index": 17,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18836.421,
+      "decision": "ml_only"
+    },
+    {
+      "index": 18,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18696.988,
+      "decision": "ml_only"
+    },
+    {
+      "index": 19,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17322.621,
+      "decision": "ml_only"
+    },
+    {
+      "index": 20,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17126.822,
+      "decision": "ml_only"
+    },
+    {
+      "index": 21,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17266.359,
+      "decision": "ml_only"
+    },
+    {
+      "index": 22,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17247.041,
+      "decision": "ml_only"
+    },
+    {
+      "index": 23,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17217.212,
+      "decision": "ml_only"
+    },
+    {
+      "index": 24,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16982.031,
+      "decision": "ml_only"
+    },
+    {
+      "index": 25,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17465.467,
+      "decision": "ml_only"
+    },
+    {
+      "index": 26,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17129.461,
+      "decision": "ml_only"
+    },
+    {
+      "index": 27,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18034.812,
+      "decision": "ml_only"
+    },
+    {
+      "index": 28,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17814.581,
+      "decision": "ml_only"
+    },
+    {
+      "index": 29,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16615.217,
+      "decision": "ml_only"
+    },
+    {
+      "index": 30,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15967.142,
+      "decision": "ml_only"
+    },
+    {
+      "index": 31,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15906.993,
+      "decision": "ml_only"
+    },
+    {
+      "index": 32,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16063.914,
+      "decision": "ml_only"
+    },
+    {
+      "index": 33,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16405.953,
+      "decision": "ml_only"
+    },
+    {
+      "index": 34,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16153.663,
+      "decision": "ml_only"
+    },
+    {
+      "index": 35,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19604.314,
+      "decision": "ml_only"
+    },
+    {
+      "index": 36,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18691.354,
+      "decision": "ml_only"
+    },
+    {
+      "index": 37,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18649.788,
+      "decision": "ml_only"
+    },
+    {
+      "index": 38,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17094.269,
+      "decision": "ml_only"
+    },
+    {
+      "index": 39,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17019.43,
+      "decision": "ml_only"
+    },
+    {
+      "index": 40,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15950.927,
+      "decision": "ml_only"
+    },
+    {
+      "index": 41,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15450.615,
+      "decision": "ml_only"
+    },
+    {
+      "index": 42,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15888.892,
+      "decision": "ml_only"
+    },
+    {
+      "index": 43,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15767.798,
+      "decision": "ml_only"
+    },
+    {
+      "index": 44,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15577.141,
+      "decision": "ml_only"
+    },
+    {
+      "index": 45,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15674.953,
+      "decision": "ml_only"
+    },
+    {
+      "index": 46,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16112.426,
+      "decision": "ml_only"
+    },
+    {
+      "index": 47,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16114.266,
+      "decision": "ml_only"
+    },
+    {
+      "index": 48,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15466.744,
+      "decision": "ml_only"
+    },
+    {
+      "index": 49,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15046.983,
+      "decision": "ml_only"
+    }
+  ],
+  "sage_results": [
+    {
+      "index": 0,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 20168.991,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (0/8 queries seen)"
+    },
+    {
+      "index": 1,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19388.385,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (1/8 queries seen)"
+    },
+    {
+      "index": 2,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19085.146,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (2/8 queries seen)"
+    },
+    {
+      "index": 3,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19719.515,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (3/8 queries seen)"
+    },
+    {
+      "index": 4,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19238.148,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (4/8 queries seen)"
+    },
+    {
+      "index": 5,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19639.259,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (5/8 queries seen)"
+    },
+    {
+      "index": 6,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19147.696,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (6/8 queries seen)"
+    },
+    {
+      "index": 7,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17250.939,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (7/8 queries seen)"
+    },
+    {
+      "index": 8,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19281.714,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (8/8 queries seen)"
+    },
+    {
+      "index": 9,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18750.663,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (9/8 queries seen)"
+    },
+    {
+      "index": 10,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19811.805,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 11,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16894.492,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 12,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17286.516,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 13,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17265.992,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 14,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16837.725,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 15,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17059.271,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 16,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17136.818,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 17,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18491.1,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 18,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 20787.712,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 19,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16788.238,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 20,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17157.319,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 21,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17005.781,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 22,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17111.101,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 23,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17398.652,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 24,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16852.386,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 25,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 14148.657,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 26,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17251.413,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 27,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 20285.464,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 28,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19831.231,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 29,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15899.396,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 30,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15337.014,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 31,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15751.378,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 32,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15985.231,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 33,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15793.343,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 34,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17522.315,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 35,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17822.646,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 36,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17518.498,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 37,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18883.173,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 38,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17845.146,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 39,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15348.642,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 40,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15642.991,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 41,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15537.315,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 42,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15885.877,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 43,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15506.79,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 44,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15271.157,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 45,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15701.801,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 46,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15644.51,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 47,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15714.033,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 48,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 14780.004,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 49,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 14895.009,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    }
+  ]
+}

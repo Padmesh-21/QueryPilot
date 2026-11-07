@@ -1,0 +1,81 @@
+% =========================================================
+% APPENDICES
+% =========================================================
+
+\begin{appendices}
+
+\chapter{Experimental Configuration}
+\label{app:config}
+
+This appendix documents the complete experimental configuration used for all
+QueryPilot evaluations reported in Chapter 6. All experiments were conducted
+with the parameters listed below to ensure reproducibility.
+
+\section*{SAGE Controller Parameters}
+
+\tabref{tab:sage_params} lists the SAGE controller parameters used in all
+experiments.
+
+\begin{table}[htbp]
+  \centering
+  \caption{SAGE Controller Configuration Parameters}
+  \label{tab:sage_params}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{|l|c|l|}
+    \hline
+    \textbf{Parameter} & \textbf{Value} & \textbf{Description} \\
+    \hline
+    $\tau_u$ (uncertainty\_threshold) & 0.8   & Maximum allowed relative uncertainty \\
+    $\tau_r$ (regression\_tolerance)  & 0.15  & Maximum allowed predicted slowdown \\
+    $n_{min}$ (min\_evidence)         & 10    & Minimum queries before model trains \\
+    drift\_sensitivity                & 0.5   & Controls Page-Hinkley $\lambda$ value \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section*{Page-Hinkley Detector Parameters}
+
+\tabref{tab:ph_params} lists the Page-Hinkley detector parameters derived
+from the SAGE drift sensitivity setting.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Page-Hinkley Detector Parameters}
+  \label{tab:ph_params}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{|l|c|l|}
+    \hline
+    \textbf{Parameter} & \textbf{Value} & \textbf{Description} \\
+    \hline
+    $\delta$ & 0.005 & Minimum detectable shift \\
+    $\lambda$ & 25   & Detection threshold ($\lfloor 50 \times (1-0.5) \rfloor$) \\
+    $\alpha$  & 0.9999 & Exponential decay factor for running mean \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section*{Database and Benchmark Configuration}
+
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Database:} MySQL 8.0.43
+  \item \textbf{Benchmark:} TPC-H Scale Factor 1 (8.6 million rows, 8 tables)
+  \item \textbf{Query templates:} Q1, Q3, Q5, Q6, Q10 (5 templates)
+  \item \textbf{Queries per scenario:} 50 (plus 5 warm-up queries)
+  \item \textbf{Random seed:} 42
+  \item \textbf{Methodology:} Interleaved execution (all 3 configs per query)
+\end{itemize}
+
+\section*{Python Package Versions}
+
+\begin{itemize}[leftmargin=2em]
+  \item mysql-connector-python: 8.x
+  \item scikit-learn: 1.x
+  \item pandas: 2.x
+  \item numpy: 1.x
+  \item streamlit: 1.x
+  \item matplotlib: 3.x
+  \item python-dotenv: 1.x
+  \item joblib: 1.x
+\end{itemize}
+
+\end{appendices}

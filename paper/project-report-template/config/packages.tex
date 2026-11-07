@@ -1,0 +1,163 @@
+% =========================================================
+% PACKAGE DECLARATIONS
+% =========================================================
+% All LaTeX packages required by this template are loaded here.
+% Each package includes a comment explaining why it is needed.
+%
+% IMPORTANT: Do not remove packages unless you are sure they
+% are not used anywhere in the template. Adding new packages
+% here is safe — just place them at the end of this file.
+% =========================================================
+
+% ---------------------------------------------------------
+% FONT SUPPORT (XeLaTeX)
+% ---------------------------------------------------------
+% fontspec: Required for XeLaTeX to use system fonts like
+% Times New Roman. This is the recommended approach for
+% matching the Anna University requirement exactly.
+% DO NOT REMOVE — the entire template depends on this.
+\usepackage{fontspec}
+
+% ---------------------------------------------------------
+% LANGUAGE AND ENCODING
+% ---------------------------------------------------------
+% For English-only documents with XeLaTeX, explicit language
+% setup is not required. If you need multilingual support,
+% uncomment the two lines below:
+% \usepackage{polyglossia}
+% \setmainlanguage{english}
+
+% ---------------------------------------------------------
+% PAGE LAYOUT
+% ---------------------------------------------------------
+% geometry: Controls page dimensions and margins.
+% The margin values here implement the official Anna University
+% requirements. See FORMAT_RULES.md, Section 2.
+\usepackage{geometry}
+
+% ---------------------------------------------------------
+% LINE SPACING
+% ---------------------------------------------------------
+% setspace: Provides \onehalfspacing, \doublespacing,
+% and \singlespacing commands for controlling line spacing
+% throughout the document.
+\usepackage{setspace}
+
+% ---------------------------------------------------------
+% HEADERS AND FOOTERS
+% ---------------------------------------------------------
+% fancyhdr: Customizes headers and footers.
+% Used to place page numbers at the center bottom.
+\usepackage{fancyhdr}
+
+% ---------------------------------------------------------
+% TABLE OF CONTENTS FORMATTING
+% ---------------------------------------------------------
+% tocloft: Customizes the Table of Contents, List of Figures,
+% and List of Tables formatting (fonts, spacing, leader dots).
+\usepackage[titles]{tocloft}
+
+% ---------------------------------------------------------
+% CHAPTER AND SECTION HEADING STYLES
+% ---------------------------------------------------------
+% titlesec: Customizes the formatting of chapter titles,
+% section headings, and subsection headings to match the
+% Anna University format (centered chapter titles, etc.).
+\usepackage{titlesec}
+
+% ---------------------------------------------------------
+% GRAPHICS
+% ---------------------------------------------------------
+% graphicx: Required for inserting images (\includegraphics).
+% Used for logos, diagrams, screenshots, and figures.
+\usepackage{graphicx}
+
+% ---------------------------------------------------------
+% COLORS (optional, for hyperlinks)
+% ---------------------------------------------------------
+\usepackage{xcolor}
+
+% ---------------------------------------------------------
+% TABLES
+% ---------------------------------------------------------
+% booktabs: Provides professional-quality table rules
+% (\toprule, \midrule, \bottomrule) instead of ugly \hline.
+\usepackage{booktabs}
+
+% array: Extended column definitions for tables.
+\usepackage{array}
+
+% longtable: For tables that span multiple pages.
+\usepackage{longtable}
+
+% tabularx: Tables with auto-adjusting column widths.
+\usepackage{tabularx}
+
+% multirow: Allows cells to span multiple rows in tables.
+\usepackage{multirow}
+
+% ---------------------------------------------------------
+% CAPTIONS
+% ---------------------------------------------------------
+% caption: Customizes figure and table caption formatting.
+% Used to make captions bold and properly sized.
+\usepackage{caption}
+
+% ---------------------------------------------------------
+% MATHEMATICAL TYPESETTING
+% ---------------------------------------------------------
+% amsmath: Standard package for mathematical equations,
+% aligned environments, and math symbols.
+\usepackage{amsmath}
+
+% amssymb: Additional math symbols.
+\usepackage{amssymb}
+
+% ---------------------------------------------------------
+% CODE LISTINGS
+% ---------------------------------------------------------
+% listings: For typesetting source code with syntax highlighting.
+% Used in Chapter 6 (Results and Coding) for sample code.
+\usepackage{listings}
+
+% ---------------------------------------------------------
+% HYPERLINKS AND CROSS-REFERENCES
+% ---------------------------------------------------------
+% hyperref: Makes cross-references, citations, TOC entries,
+% and URLs clickable in the PDF. Colors are set to black
+% for print compatibility.
+\usepackage[hidelinks]{hyperref}
+
+% ---------------------------------------------------------
+% BIBLIOGRAPHY
+% ---------------------------------------------------------
+% natbib: Flexible bibliography support with author-year
+% and numbered citation styles. Used with plainnat style
+% for alphabetical ordering as required by AU guidelines.
+\usepackage[numbers,sort&compress]{natbib}
+
+% ---------------------------------------------------------
+% APPENDIX SUPPORT
+% ---------------------------------------------------------
+% appendix: Provides additional control over appendix formatting.
+\usepackage[toc,page]{appendix}
+
+% ---------------------------------------------------------
+% LIST CUSTOMIZATION
+% ---------------------------------------------------------
+% enumitem: Customizes itemize, enumerate, and description lists.
+\usepackage{enumitem}
+
+% ---------------------------------------------------------
+% PDF METADATA
+% ---------------------------------------------------------
+% This sets the PDF document properties (visible in PDF readers).
+% The values are pulled from metadata.tex commands.
+\AtBeginDocument{%
+  \hypersetup{
+    pdftitle={\ProjectTitle},
+    pdfauthor={\StudentOneName},
+    pdfsubject={B.E. Project Report},
+    pdfkeywords={Anna University, Project Report, \BranchName},
+  }%
+}

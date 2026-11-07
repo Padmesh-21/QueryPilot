@@ -1,0 +1,1043 @@
+{
+  "metrics": {
+    "scenario": "gradual_shift",
+    "n_queries": 50,
+    "seed": 42,
+    "methodology": "interleaved",
+    "native": {
+      "mean_ms": 22364.055,
+      "median_ms": 21754.391,
+      "p95_ms": 35805.975,
+      "total_ms": 1118202.77,
+      "n_queries": 50
+    },
+    "ml_only": {
+      "mean_ms": 22289.646,
+      "median_ms": 21674.656,
+      "p95_ms": 36440.864,
+      "total_ms": 1114482.321,
+      "n_queries": 50
+    },
+    "sage": {
+      "mean_ms": 21917.774,
+      "median_ms": 21426.695,
+      "p95_ms": 35413.792,
+      "total_ms": 1095888.711,
+      "n_queries": 50
+    },
+    "sage_decisions": {
+      "adapt": 0,
+      "gather_evidence": 10,
+      "fallback": 40
+    },
+    "sage_regression_rate_pct": 0.0,
+    "ml_only_regression_rate_pct": 14.0,
+    "querypilot_overhead_ms": 4.07
+  },
+  "native_results": [
+    {
+      "index": 0,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 35805.975,
+      "decision": "native"
+    },
+    {
+      "index": 1,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 29580.883,
+      "decision": "native"
+    },
+    {
+      "index": 2,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 30155.376,
+      "decision": "native"
+    },
+    {
+      "index": 3,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 11720.428,
+      "decision": "native"
+    },
+    {
+      "index": 4,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 29589.158,
+      "decision": "native"
+    },
+    {
+      "index": 5,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10742.823,
+      "decision": "native"
+    },
+    {
+      "index": 6,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 35661.742,
+      "decision": "native"
+    },
+    {
+      "index": 7,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10752.504,
+      "decision": "native"
+    },
+    {
+      "index": 8,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 29257.356,
+      "decision": "native"
+    },
+    {
+      "index": 9,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 25060.519,
+      "decision": "native"
+    },
+    {
+      "index": 10,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 27920.965,
+      "decision": "native"
+    },
+    {
+      "index": 11,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10807.81,
+      "decision": "native"
+    },
+    {
+      "index": 12,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 12113.049,
+      "decision": "native"
+    },
+    {
+      "index": 13,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 23918.15,
+      "decision": "native"
+    },
+    {
+      "index": 14,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 24216.847,
+      "decision": "native"
+    },
+    {
+      "index": 15,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 36301.586,
+      "decision": "native"
+    },
+    {
+      "index": 16,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 30060.57,
+      "decision": "native"
+    },
+    {
+      "index": 17,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 31888.959,
+      "decision": "native"
+    },
+    {
+      "index": 18,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 24224.816,
+      "decision": "native"
+    },
+    {
+      "index": 19,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10933.275,
+      "decision": "native"
+    },
+    {
+      "index": 20,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 33557.261,
+      "decision": "native"
+    },
+    {
+      "index": 21,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10220.628,
+      "decision": "native"
+    },
+    {
+      "index": 22,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 34450.065,
+      "decision": "native"
+    },
+    {
+      "index": 23,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 17505.806,
+      "decision": "native"
+    },
+    {
+      "index": 24,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16500.312,
+      "decision": "native"
+    },
+    {
+      "index": 25,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 12670.416,
+      "decision": "native"
+    },
+    {
+      "index": 26,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 15704.521,
+      "decision": "native"
+    },
+    {
+      "index": 27,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 11333.865,
+      "decision": "native"
+    },
+    {
+      "index": 28,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 23234.058,
+      "decision": "native"
+    },
+    {
+      "index": 29,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18376.076,
+      "decision": "native"
+    },
+    {
+      "index": 30,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17422.919,
+      "decision": "native"
+    },
+    {
+      "index": 31,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 34483.477,
+      "decision": "native"
+    },
+    {
+      "index": 32,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 23213.102,
+      "decision": "native"
+    },
+    {
+      "index": 33,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18061.369,
+      "decision": "native"
+    },
+    {
+      "index": 34,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 17885.534,
+      "decision": "native"
+    },
+    {
+      "index": 35,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18628.286,
+      "decision": "native"
+    },
+    {
+      "index": 36,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 38405.348,
+      "decision": "native"
+    },
+    {
+      "index": 37,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 21007.258,
+      "decision": "native"
+    },
+    {
+      "index": 38,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 25564.346,
+      "decision": "native"
+    },
+    {
+      "index": 39,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 21754.391,
+      "decision": "native"
+    },
+    {
+      "index": 40,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 17530.202,
+      "decision": "native"
+    },
+    {
+      "index": 41,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18545.31,
+      "decision": "native"
+    },
+    {
+      "index": 42,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 24256.924,
+      "decision": "native"
+    },
+    {
+      "index": 43,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 21484.207,
+      "decision": "native"
+    },
+    {
+      "index": 44,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 20033.021,
+      "decision": "native"
+    },
+    {
+      "index": 45,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18408.665,
+      "decision": "native"
+    },
+    {
+      "index": 46,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 22221.508,
+      "decision": "native"
+    },
+    {
+      "index": 47,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19464.016,
+      "decision": "native"
+    },
+    {
+      "index": 48,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 26387.261,
+      "decision": "native"
+    },
+    {
+      "index": 49,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 19179.827,
+      "decision": "native"
+    }
+  ],
+  "ml_results": [
+    {
+      "index": 0,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 34712.035,
+      "decision": "ml_only"
+    },
+    {
+      "index": 1,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 32512.523,
+      "decision": "ml_only"
+    },
+    {
+      "index": 2,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 34790.984,
+      "decision": "ml_only"
+    },
+    {
+      "index": 3,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 11017.875,
+      "decision": "ml_only"
+    },
+    {
+      "index": 4,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 29086.212,
+      "decision": "ml_only"
+    },
+    {
+      "index": 5,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10677.38,
+      "decision": "ml_only"
+    },
+    {
+      "index": 6,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 32704.152,
+      "decision": "ml_only"
+    },
+    {
+      "index": 7,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 11171.963,
+      "decision": "ml_only"
+    },
+    {
+      "index": 8,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 33852.825,
+      "decision": "ml_only"
+    },
+    {
+      "index": 9,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 21724.61,
+      "decision": "ml_only"
+    },
+    {
+      "index": 10,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 32089.996,
+      "decision": "ml_only"
+    },
+    {
+      "index": 11,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 11316.211,
+      "decision": "ml_only"
+    },
+    {
+      "index": 12,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10921.929,
+      "decision": "ml_only"
+    },
+    {
+      "index": 13,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 21674.656,
+      "decision": "ml_only"
+    },
+    {
+      "index": 14,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 19707.98,
+      "decision": "ml_only"
+    },
+    {
+      "index": 15,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 34544.46,
+      "decision": "ml_only"
+    },
+    {
+      "index": 16,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 31698.018,
+      "decision": "ml_only"
+    },
+    {
+      "index": 17,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 29140.729,
+      "decision": "ml_only"
+    },
+    {
+      "index": 18,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 22022.312,
+      "decision": "ml_only"
+    },
+    {
+      "index": 19,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 14195.114,
+      "decision": "ml_only"
+    },
+    {
+      "index": 20,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 24150.971,
+      "decision": "ml_only"
+    },
+    {
+      "index": 21,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10758.078,
+      "decision": "ml_only"
+    },
+    {
+      "index": 22,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 41082.382,
+      "decision": "ml_only"
+    },
+    {
+      "index": 23,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18656.447,
+      "decision": "ml_only"
+    },
+    {
+      "index": 24,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16380.069,
+      "decision": "ml_only"
+    },
+    {
+      "index": 25,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10990.266,
+      "decision": "ml_only"
+    },
+    {
+      "index": 26,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 19024.754,
+      "decision": "ml_only"
+    },
+    {
+      "index": 27,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 9457.413,
+      "decision": "ml_only"
+    },
+    {
+      "index": 28,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 23534.406,
+      "decision": "ml_only"
+    },
+    {
+      "index": 29,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 22106.627,
+      "decision": "ml_only"
+    },
+    {
+      "index": 30,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16841.835,
+      "decision": "ml_only"
+    },
+    {
+      "index": 31,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 37078.317,
+      "decision": "ml_only"
+    },
+    {
+      "index": 32,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 21440.412,
+      "decision": "ml_only"
+    },
+    {
+      "index": 33,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18109.449,
+      "decision": "ml_only"
+    },
+    {
+      "index": 34,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18730.212,
+      "decision": "ml_only"
+    },
+    {
+      "index": 35,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18811.184,
+      "decision": "ml_only"
+    },
+    {
+      "index": 36,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 36440.864,
+      "decision": "ml_only"
+    },
+    {
+      "index": 37,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 20392.083,
+      "decision": "ml_only"
+    },
+    {
+      "index": 38,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 24579.605,
+      "decision": "ml_only"
+    },
+    {
+      "index": 39,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 22909.002,
+      "decision": "ml_only"
+    },
+    {
+      "index": 40,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18013.017,
+      "decision": "ml_only"
+    },
+    {
+      "index": 41,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 17801.452,
+      "decision": "ml_only"
+    },
+    {
+      "index": 42,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 22652.021,
+      "decision": "ml_only"
+    },
+    {
+      "index": 43,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 22073.702,
+      "decision": "ml_only"
+    },
+    {
+      "index": 44,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 20164.774,
+      "decision": "ml_only"
+    },
+    {
+      "index": 45,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18496.296,
+      "decision": "ml_only"
+    },
+    {
+      "index": 46,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 22550.18,
+      "decision": "ml_only"
+    },
+    {
+      "index": 47,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18997.371,
+      "decision": "ml_only"
+    },
+    {
+      "index": 48,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 24271.629,
+      "decision": "ml_only"
+    },
+    {
+      "index": 49,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18425.539,
+      "decision": "ml_only"
+    }
+  ],
+  "sage_results": [
+    {
+      "index": 0,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 34207.035,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (0/8 queries seen)"
+    },
+    {
+      "index": 1,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 28099.988,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (1/8 queries seen)"
+    },
+    {
+      "index": 2,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 30007.04,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (2/8 queries seen)"
+    },
+    {
+      "index": 3,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10891.626,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (3/8 queries seen)"
+    },
+    {
+      "index": 4,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 29681.424,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (4/8 queries seen)"
+    },
+    {
+      "index": 5,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10598.628,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (5/8 queries seen)"
+    },
+    {
+      "index": 6,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 29389.623,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (6/8 queries seen)"
+    },
+    {
+      "index": 7,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10785.123,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (7/8 queries seen)"
+    },
+    {
+      "index": 8,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 29315.528,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (8/8 queries seen)"
+    },
+    {
+      "index": 9,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 23386.063,
+      "decision": "gather_evidence",
+      "drift_detected": true,
+      "reason": "Collecting evidence (9/8 queries seen)"
+    },
+    {
+      "index": 10,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 35413.792,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 11,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10936.027,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 12,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 12196.373,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 13,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 23291.602,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 14,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 20665.931,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 15,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 31129.685,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 16,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 30530.548,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 17,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 29144.434,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 18,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 21305.634,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 19,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 14509.4,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 20,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 23773.608,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 21,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 11825.34,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 22,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 35873.255,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 23,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 19866.203,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 24,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18914.259,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 25,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 11768.799,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 26,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 20014.161,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 27,
+      "sql": "SELECT SUM(l_extendedprice * l_discount) AS revenue FROM lineitem WHERE l_shipda",
+      "time_ms": 10041.237,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 28,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 23737.323,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 29,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18332.58,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 30,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 14656.568,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 31,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 34889.001,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 32,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 22790.577,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 33,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 19085.391,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 34,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 19761.046,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 35,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 20795.596,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 36,
+      "sql": "SELECT l_returnflag, l_linestatus, SUM(l_quantity) AS sum_qty, SUM(l_extendedpri",
+      "time_ms": 35757.503,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 37,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 18070.365,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 38,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 23822.976,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 39,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 21588.85,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 40,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18531.607,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 41,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 16145.768,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 42,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 21426.695,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 43,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 23402.095,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 44,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18377.211,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 45,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 17983.454,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 46,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 24951.547,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 47,
+      "sql": "SELECT l_orderkey, SUM(l_extendedprice * (1 - l_discount)) AS revenue, o_orderda",
+      "time_ms": 23042.447,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 48,
+      "sql": "SELECT c_custkey, c_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue, c_",
+      "time_ms": 22888.926,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    },
+    {
+      "index": 49,
+      "sql": "SELECT n_name, SUM(l_extendedprice * (1 - l_discount)) AS revenue FROM customer ",
+      "time_ms": 18288.819,
+      "decision": "fallback",
+      "drift_detected": true,
+      "reason": "Workload drift detected \u2014 falling back to native optimizer"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+% =========================================================
+% LIST OF TABLES
+% =========================================================
+% Source: UG_REPORT_FORMAT.pdf §3.5
+%
+% FORMAT REQUIREMENTS:
+%   - 1.5 line spacing (handled by global setting)
+%   - Heading: "LIST OF TABLES"
+%   - Captions must match exactly as they appear above tables
+%   - Column layout: TABLE NO. | NAME OF THE TABLE | PAGE NO.
+%
+% This file generates the List of Tables automatically.
+% LaTeX builds it from \caption commands in table environments.
+% You do NOT need to edit this file manually.
+%
+% NOTE: Compile TWICE for the list to be fully up to date.
+% =========================================================
+
+\clearpage
+\thispagestyle{plain}
+
+% Add to Table of Contents
+\phantomsection
+\addcontentsline{toc}{chapter}{LIST OF TABLES}
+
+% Generate the List of Tables
+\listoftables

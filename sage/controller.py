@@ -12,7 +12,7 @@ class SAGEController:
         self,
         uncertainty_threshold=0.8,
         drift_sensitivity=0.5,
-        min_evidence=8,
+        min_evidence=10,
         regression_tolerance=0.15,
     ):
         self.uncertainty_threshold = uncertainty_threshold

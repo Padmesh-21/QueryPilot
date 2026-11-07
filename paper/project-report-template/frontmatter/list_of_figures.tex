@@ -1,0 +1,27 @@
+% =========================================================
+% LIST OF FIGURES
+% =========================================================
+% Source: UG_REPORT_FORMAT.pdf §3.6
+%
+% FORMAT REQUIREMENTS:
+%   - 1.5 line spacing (handled by global setting)
+%   - Heading: "LIST OF FIGURES"
+%   - Captions must match exactly as they appear below figures
+%   - Column layout: FIGURE NO. | NAME OF THE FIGURE | PAGE NO.
+%
+% This file generates the List of Figures automatically.
+% LaTeX builds it from \caption commands in figure environments.
+% You do NOT need to edit this file manually.
+%
+% NOTE: Compile TWICE for the list to be fully up to date.
+% =========================================================
+
+\clearpage
+\thispagestyle{plain}
+
+% Add to Table of Contents
+\phantomsection
+\addcontentsline{toc}{chapter}{LIST OF FIGURES}
+
+% Generate the List of Figures
+\listoffigures

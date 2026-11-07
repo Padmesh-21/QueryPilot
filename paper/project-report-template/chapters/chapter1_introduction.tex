@@ -1,0 +1,137 @@
+% =========================================================
+% CHAPTER 1: INTRODUCTION
+% =========================================================
+
+\chapter{INTRODUCTION}
+\label{chap:introduction}
+
+Modern database systems are central to nearly every software application, from
+e-commerce platforms to enterprise analytics pipelines. The efficiency with
+which a database executes SQL queries directly affects application
+responsiveness, server resource consumption, and the overall user experience.
+Among the many factors that determine query efficiency, the choice of execution
+plan made by the query optimizer is one of the most consequential. A
+well-chosen plan can execute a query in milliseconds; a poor one can take
+seconds or minutes on the same data.
+
+Traditional database optimizers, including the optimizer in MySQL 8.0, make
+these plan selection decisions using internally maintained cost models and
+statistical summaries of the stored data. While this approach performs well
+under stable conditions, it faces a fundamental challenge in real-world
+deployments: workloads are not static. The mix of queries arriving at a
+database changes over time as application usage patterns evolve, new features
+are deployed, and seasonal or event-driven fluctuations occur. A plan that was
+optimal for the previous workload distribution may become inefficient as the
+distribution shifts.
+
+QueryPilot addresses this challenge as an external Python middleware that wraps
+MySQL query execution. For every incoming SQL query, QueryPilot extracts
+structural features, generates a small set of candidate execution variants
+using MySQL optimizer hints, predicts their relative performance using an
+online-trained machine learning ensemble, estimates prediction uncertainty,
+monitors the query stream for workload drift, and uses a guarded decision
+controller called SAGE to make a final bounded-risk execution decision.
+
+\section{OVERVIEW}
+\label{sec:overview}
+
+QueryPilot is an uncertainty-aware, self-adaptive query optimization framework
+designed to operate as an external layer over MySQL 8.0 without requiring any
+modifications to the database internals. Applications interact with QueryPilot
+through a Python SDK interface rather than connecting directly to MySQL.
+Internally, every query passes through a ten-stage pipeline that includes
+workload collection, feature extraction, candidate generation, performance
+prediction, uncertainty estimation, drift detection, SAGE decision-making,
+query execution, feedback collection, and model update. The results of every
+experiment are visualized through a real-time Streamlit dashboard.
+
+The central research question that QueryPilot investigates is: \textit{Can an
+uncertainty-aware, stability-constrained query optimization framework adapt to
+dynamic database workloads while reducing query execution time and controlling
+performance regressions?} The project evaluates this question experimentally
+using the TPC-H benchmark at scale factor 1 under four controlled workload
+scenarios: stable, sudden shift, gradual shift, and data skew.
+
+\section{PROBLEM STATEMENT}
+\label{sec:problem_statement}
+
+The problem addressed in this project has two distinct dimensions. First,
+database workloads are non-stationary: the query patterns arriving at a
+production database change over time, and an execution plan that was optimal
+under one distribution may become inefficient under another. MySQL's native
+optimizer addresses this partially through periodic statistics collection, but
+it does not explicitly monitor for workload shifts or adapt its strategy in
+response to them.
+
+Second, learned query optimization techniques --- which use machine learning to
+improve execution plan selection --- suffer from a fragility problem. A model
+trained under one workload distribution can make confidently wrong
+recommendations when that distribution drifts. An unconstrained ML-based
+optimizer that blindly follows its model's recommendations under these
+conditions can introduce performance regressions, making queries slower than
+MySQL's native optimizer would have. Neither the problem of workload drift
+detection nor the problem of uncertainty-aware candidate filtering has been
+adequately addressed in the context of external hint-based query optimization
+for MySQL.
+
+\subsection{Motivation}
+\label{subsec:motivation}
+
+The motivation for QueryPilot stems from two observed gaps in the existing
+landscape of query optimization. Traditional rule-based optimizers make static
+decisions based on collected statistics and do not adapt when those statistics
+become unrepresentative due to workload shifts. Learned optimizers such as Bao
+\cite{marcus2021bao} and Neo \cite{marcus2019neo} demonstrate that machine
+learning can improve over native optimizers on training workloads, but neither
+system explicitly addresses what should happen when the model's predictions are
+unreliable or when the workload has drifted away from the training distribution.
+QueryPilot is motivated by the hypothesis that a conservative,
+uncertainty-aware decision framework --- one that defers to the native optimizer
+when conditions are unfavourable --- is more robust in practice than a system
+that always applies its best ML recommendation.
+
+\section{OBJECTIVES}
+\label{sec:objectives}
+
+The objectives of this project are:
+
+\begin{itemize}[leftmargin=2em]
+  \item To design and implement QueryPilot, a Python middleware for adaptive
+        query optimization over MySQL 8.0 that operates without modifying
+        database internals.
+  \item To build a feature extraction pipeline that derives eight meaningful
+        query characteristics from MySQL's EXPLAIN output in real time.
+  \item To implement a candidate optimization generator that produces
+        controlled query variants using MySQL's supported optimizer hint
+        system.
+  \item To train a three-model ensemble machine learning predictor on observed
+        execution data and use ensemble disagreement as a practical uncertainty
+        estimator.
+  \item To implement the Page-Hinkley sequential change-point detection
+        algorithm for real-time workload drift detection.
+  \item To design and implement SAGE, a guarded decision controller that
+        combines uncertainty estimation, drift detection, and risk-bounded
+        adaptation.
+  \item To evaluate QueryPilot against a native MySQL baseline and an
+        unconstrained ML-Only baseline across four controlled workload
+        scenarios using the TPC-H benchmark with an interleaved execution
+        methodology.
+  \item To build a Streamlit monitoring dashboard that visualizes query
+        performance, SAGE decisions, drift detection events, and prediction
+        uncertainty in real time.
+\end{itemize}
+
+\subsection{Scope of the Project}
+\label{subsec:scope}
+
+The scope of this project is bounded to MySQL 8.0.43 as the target database
+system. Optimization decisions are made using MySQL's supported optimizer hint
+system, specifically the NO\_INDEX, HASH\_JOIN, and NO\_BKA hints. The
+framework does not claim to enumerate or evaluate every possible execution plan.
+Evaluation uses the TPC-H benchmark at scale factor 1, generating approximately
+8.6 million rows across eight tables. The framework is implemented as a Python
+SDK and does not implement a transparent wire-protocol database proxy. Extensions
+such as a proxy layer, support for other database systems, and advanced hint
+types such as FORCE INDEX or JOIN ORDER are identified as future work. All
+experiments are conducted on a single machine running Windows, with MySQL and
+the Python middleware co-located on the same host.

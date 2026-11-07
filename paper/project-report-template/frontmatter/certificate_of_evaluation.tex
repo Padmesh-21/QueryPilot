@@ -1,0 +1,89 @@
+% =========================================================
+% CERTIFICATE OF EVALUATION
+% =========================================================
+% Source: batch_86.pdf (observed — page iii of sample report)
+%
+% NOTE: This page is NOT part of the official Anna University
+% format (UG_REPORT_FORMAT.pdf). However, many affiliated
+% colleges require it. It is included here as an OPTIONAL page.
+%
+% HOW TO INCLUDE/EXCLUDE:
+%   - To include: keep the \input line in main.tex
+%   - To exclude: comment out the \input line in main.tex
+%
+% CUSTOMIZABLE: All metadata values from metadata.tex.
+% You may also modify the table columns if your college
+% uses a different format.
+% =========================================================
+
+\clearpage
+\thispagestyle{plain}
+
+\begin{center}
+  \vspace*{0.3cm}
+  {\SubTitleSize\bfseries CERTIFICATE OF EVALUATION\par}
+\end{center}
+
+\vspace{0.6cm}
+
+% --- College and branch info ---
+\noindent
+\begin{tabular}{@{}l@{\hspace{0.5em}}l@{\hspace{0.5em}}l}
+  College Name & : & \CollegeName \\
+  Branch       & : & \MakeUppercase{\BranchName} \\
+  Semester     & : & \Semester \\
+\end{tabular}
+
+\vspace{0.5cm}
+
+% --- Student / Project / Supervisor Table ---
+% CUSTOMIZABLE: Add or remove rows for more/fewer students.
+\begin{center}
+\begin{tabular}{|c|p{3.2cm}|p{6cm}|p{3.2cm}|}
+  \hline
+  \textbf{S. No} & \textbf{Name of the Students} & \textbf{Title of the Project}
+    & \textbf{Name of the Supervisor with Designation} \\
+  \hline
+  1 &
+    \StudentOneName \newline (\StudentOneRegNo) &
+    \multirow{2}{6cm}{\centering \footnotesize \ProjectTitle} &
+    \multirow{2}{3.2cm}{%
+      \small \GuideName \newline
+      \GuideQualification{} \newline
+      \GuideDesignation
+    } \\
+  \cline{1-2}
+  2 &
+    \StudentTwoName \newline (\StudentTwoRegNo) &
+    & \\
+  \hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+
+% --- Evaluation statement ---
+\sloppy
+\noindent
+The report of the project work submitted by the above students in partial
+fulfilment for the award of \DegreeName{} Degree in \DepartmentName{}
+of Anna University was evaluated and confirmed to be a report of the work
+done by the above students.
+\fussy
+
+\vspace{0.5cm}
+
+\noindent
+Submitted for project review and viva voce exam held on \rule{3cm}{0.4pt}
+
+\vspace{1.5cm}
+
+% --- Examiner signature blocks ---
+\noindent
+\begin{minipage}[t]{0.45\textwidth}
+  \textbf{(INTERNAL EXAMINER)}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.45\textwidth}
+  \textbf{(EXTERNAL EXAMINER)}
+\end{minipage}

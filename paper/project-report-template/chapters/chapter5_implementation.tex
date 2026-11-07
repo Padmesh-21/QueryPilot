@@ -1,0 +1,222 @@
+% =========================================================
+% CHAPTER 5: SYSTEM IMPLEMENTATION
+% =========================================================
+
+\chapter{SYSTEM IMPLEMENTATION}
+\label{chap:implementation}
+
+QueryPilot is implemented entirely in Python using a set of open-source
+libraries. The database connector is mysql-connector-python (version 8.x),
+chosen for direct MySQL 8.0 compatibility without the overhead of an
+object-relational mapping layer. Machine learning components use scikit-learn,
+a widely adopted Python library for classical machine learning algorithms.
+Data processing uses pandas and numpy. The monitoring dashboard uses Streamlit,
+a Python-native framework for building interactive web applications from
+scripts. Visualization within the dashboard uses matplotlib. The development
+environment is Windows 10/11 with Python 3.10 and Visual Studio Code as the
+integrated development environment.
+
+The project is organized into six primary packages: database, collector, ml,
+sage, workload, and experiments. Each package is implemented as a Python module
+with a clear single responsibility. Configuration is managed through environment
+variables loaded from a \texttt{.env} file using the python-dotenv library,
+ensuring that database credentials are never hardcoded in source files.
+
+\section{MODULE DESCRIPTION}
+\label{sec:module_description}
+
+\subsection{Database Connection Module}
+\label{subsec:db_connection}
+
+The Database Connection Module, implemented in \texttt{database/connection.py},
+provides a single function \texttt{get\_connection()} that reads database
+credentials from environment variables and returns a live
+\texttt{mysql.connector.CMySQLConnection} object. The module uses the
+\texttt{python-dotenv} library to load the \texttt{.env} file at import time,
+exposing the host, port, username, password, and database name as environment
+variables. This design ensures that all other modules can obtain a fresh
+connection with a single import and function call, without duplicating
+connection logic. The \texttt{database/load\_tpch.py} script uses this
+module to load TPC-H data using MySQL's LOAD DATA LOCAL INFILE command after
+enabling the \texttt{local\_infile} global variable.
+
+\subsection{Feature Extraction Module}
+\label{subsec:feature_extraction}
+
+The Feature Extraction Module, implemented in
+\texttt{collector/feature\_extractor.py}, derives a fixed eight-dimensional
+feature vector from any incoming SQL query. The module first performs lexical
+analysis on the query string to extract the query type, the number of explicit
+JOIN clauses, and boolean flags for WHERE, GROUP BY, and ORDER BY. It then
+executes an EXPLAIN query against MySQL and parses the resulting rows to
+extract the number of tables in the plan, the sum of estimated rows, and
+whether any table uses an index. The EXPLAIN output is parsed by inspecting
+the column names from the cursor description, making the extraction robust to
+minor variations in MySQL's EXPLAIN output format across versions.
+
+\subsection{Candidate Optimization Generator Module}
+\label{subsec:candidate_generator}
+
+The Candidate Generator Module, implemented in
+\texttt{collector/candidate\_generator.py}, produces a list of candidate
+SQL variants for a given query. The first candidate is always the native
+query with no modifications. Subsequent candidates inject MySQL optimizer
+hints by inserting a hint comment immediately after the SELECT keyword using
+a regular expression substitution. The module first calls EXPLAIN to
+identify the first table in the plan, which is used as the hint target. For
+join queries, HASH\_JOIN and NO\_BKA hints are also generated using the first
+joined table name extracted from the query string. The candidate list is
+capped at four entries.
+
+\subsection{Performance Prediction Model Module}
+\label{subsec:prediction_model}
+
+The Performance Prediction Model Module, implemented in
+\texttt{ml/performance\_model.py}, maintains an ensemble of three
+independently trained scikit-learn regressors. The feature order used by the
+model is fixed as: query\_type\_encoded, num\_joins, num\_tables, has\_where,
+has\_group\_by, has\_order\_by, estimated\_rows, and uses\_index. The
+\texttt{features\_to\_vector} function converts a feature dictionary to a
+numpy array using this fixed order.
+
+The ensemble training algorithm is as follows:
+
+\begin{enumerate}
+  \item Collect (feature vector, execution time) pairs in the training buffer.
+  \item When the buffer size reaches the minimum evidence threshold (10), extract
+        arrays $X$ (feature matrix) and $y$ (execution times).
+  \item Fit each of the three models independently on the same $(X, y)$ data.
+  \item Set the \texttt{is\_trained} flag to True.
+\end{enumerate}
+
+The \texttt{predict\_with\_uncertainty} method returns the tuple
+$(\mu(x), \sigma(x))$ where $\mu(x)$ is the mean of the three predictions
+and $\sigma(x)$ is their standard deviation.
+
+\subsection{Uncertainty Estimator Module}
+\label{subsec:uncertainty}
+
+The Uncertainty Estimator is implemented inline within the
+\texttt{PerformanceModel} class's \texttt{predict\_with\_uncertainty} method.
+For a given feature vector $x$, the three model predictions
+$\hat{y}_1, \hat{y}_2, \hat{y}_3$ are computed independently. The relative
+uncertainty is defined as:
+
+\begin{equation}
+  u(x) = \frac{\sigma(x)}{\mu(x)}
+  \label{eq:uncertainty}
+\end{equation}
+
+where $\mu(x) = \frac{1}{3}\sum_{i=1}^{3}\hat{y}_i$ and
+$\sigma(x) = \sqrt{\frac{1}{3}\sum_{i=1}^{3}(\hat{y}_i - \mu(x))^2}$.
+
+A candidate is excluded from SAGE's consideration if its $u(x) > \tau_u = 0.8$.
+This threshold was chosen to allow moderate ensemble disagreement while
+filtering out candidates where the three models give substantially different
+predictions, which typically indicates that the feature vector is unlike
+anything in the training data.
+
+\subsection{Workload Drift Detector Module}
+\label{subsec:drift_detector}
+
+The Workload Drift Detector Module, implemented in
+\texttt{ml/drift\_detector.py}, implements the Page-Hinkley sequential
+change-point test. The \texttt{PageHinkley} class maintains four state
+variables: the observation count $n$, a running exponentially weighted mean
+$\bar{x}$, the cumulative sum $S_n$, and the running minimum $m_n$. For each
+new observation $x_t$, the update rule is:
+
+\begin{equation}
+  PH_n = \left[\sum_{t=1}^{n}(x_t - \bar{x}_t - \delta)\right] -
+         \min_{1 \le t \le n}\left[\sum_{i=1}^{t}(x_i - \bar{x}_i - \delta)\right]
+  \label{eq:pagehinkley}
+\end{equation}
+
+Drift is signalled when $PH_n > \lambda$. In QueryPilot, $\delta = 0.005$ and
+$\lambda = 25$ (derived from the drift sensitivity parameter 0.5 as
+$\lambda = \lfloor 50 \times (1 - 0.5) \rfloor$).
+
+The \texttt{WorkloadDriftDetector} class wraps two \texttt{PageHinkley}
+instances: one global detector across all queries, and one per-query detector
+keyed by the first 60 characters of the query string with whitespace removed.
+The \texttt{update(sql, execution\_time\_ms)} method updates both detectors
+and returns the result of the global detector.
+
+\subsection{SAGE Controller Module}
+\label{subsec:sage_controller}
+
+The SAGE Controller Module, implemented in \texttt{sage/controller.py}, is the
+decision-making core of QueryPilot. The complete SAGE algorithm is:
+
+\begin{enumerate}
+  \item \textbf{Input:} SQL query string, MySQL cursor.
+  \item Generate candidates using the Candidate Generator.
+  \item Extract features using the Feature Extractor.
+  \item Convert features to a fixed-order vector using \texttt{features\_to\_vector}.
+  \item Evaluate \texttt{not\_ready}: True if the model is untrained or
+        \texttt{queries\_seen $<$ n\_min}.
+  \item \textbf{If not\_ready:} set decision = gather\_evidence, selected = native.
+  \item \textbf{Elif drift\_active:} set decision = fallback, selected = native,
+        clear training buffer, reset drift flag.
+  \item \textbf{Else:} predict $(\mu_{native}, \sigma_{native})$ for native features.
+        For each candidate $c$:
+        \begin{itemize}
+          \item Extract features for $c$ (reuse native features if hint\_type is native).
+          \item Predict $(\mu_c, \sigma_c)$.
+          \item Compute $u_c = \sigma_c / \mu_c$.
+          \item Skip if $u_c > \tau_u = 0.8$.
+          \item Skip if $\mu_c > \mu_{native} \times (1 + \tau_r = 0.15)$.
+          \item Track the candidate with the lowest $\mu_c$.
+        \end{itemize}
+        If best candidate is non-native: decision = adapt.
+        Else: decision = fallback.
+  \item Execute the selected SQL using \texttt{\_run(sql, cursor)}.
+  \item Update the drift detector with actual execution time.
+  \item Increment \texttt{queries\_seen}; append (fvec, time) to training buffer.
+  \item If buffer size $\geq$ n\_min: retrain all three ensemble models.
+  \item Log the decision to the CSV file via \texttt{MetricsLogger}.
+  \item \textbf{Return:} result dictionary with execution time, decision, reason,
+        prediction mean, uncertainty, and drift flag.
+\end{enumerate}
+
+\subsection{Workload Generator Module}
+\label{subsec:workload_generator}
+
+The Workload Generator Module, implemented in \texttt{workload/generator.py}
+and \texttt{workload/queries.py}, provides five TPC-H query templates (Q1, Q3,
+Q5, Q6, Q10) and four scenario generators. Each template is parameterized with
+a set of concrete parameter values drawn uniformly at random using a seeded
+numpy random number generator, ensuring full reproducibility. The four
+scenarios are: stable (uniform random mix of all five query types), sudden
+shift (first 60\% scan-heavy, last 40\% join-heavy), gradual shift (probability
+of join-heavy queries increases linearly from 0 to 1), and data skew (all Q3
+queries with parameter distribution shifting from BUILDING to AUTOMOBILE at
+70\% of the run).
+
+\subsection{Experiment Runner Module}
+\label{subsec:experiment_runner}
+
+The Experiment Runner Module, implemented in \texttt{experiments/baseline.py},
+executes the three-configuration interleaved comparison experiment. For each
+query in the workload, all three configurations --- native MySQL, ML-Only, and
+QueryPilot + SAGE --- execute the query back-to-back before moving to the next
+query. This interleaved design controls for MySQL buffer pool warm-up bias,
+ensuring that all three configurations observe the same buffer pool state for
+each query. The module computes mean latency, median latency, P95 latency,
+total execution time, SAGE regression rate (adapt decisions only), ML-Only
+regression rate, and QueryPilot per-query overhead. Results are saved to JSON
+files in the results directory.
+
+\subsection{Dashboard Module}
+\label{subsec:dashboard}
+
+The Dashboard Module, implemented in \texttt{dashboard/app.py}, provides a
+four-page Streamlit web application. The Overview page displays latency summary
+tables and bar charts comparing the three configurations. The Query Timeline
+page plots per-query execution times as line charts with red triangle markers
+at drift detection events. The SAGE Decisions page shows a pie chart of
+decision type frequencies and a table of the most recent SAGE decisions with
+their reasons. The Experiment Comparison page shows grouped bar charts
+comparing mean latency and regression rates across all four scenarios. The
+dashboard reads from result JSON files in the experiments results directory and
+allows the user to select a result file from the sidebar.

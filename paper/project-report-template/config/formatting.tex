@@ -1,0 +1,304 @@
+% =========================================================
+% FORMATTING CONFIGURATION
+% =========================================================
+% This file implements ALL the visual formatting rules from
+% the Anna University guidelines. Each setting references
+% the corresponding rule in FORMAT_RULES.md.
+%
+% IMPORTANT: Values marked "DO NOT CHANGE" are mandatory
+% per official guidelines. Values marked "CUSTOMIZABLE"
+% can be safely adjusted.
+% =========================================================
+
+% ---------------------------------------------------------
+% PAGE MARGINS
+% ---------------------------------------------------------
+% Source: WhatsApp Image (margin specs), FORMAT_RULES.md §2
+%
+% Official requirements (ranges):
+%   Top:    30–35 mm    → using 32 mm
+%   Bottom: 25–30 mm    → using 27 mm
+%   Left:   35–40 mm    → using 37 mm (extra for binding)
+%   Right:  20–25 mm    → using 22 mm
+%
+% DO NOT CHANGE these below the minimum values.
+% CUSTOMIZABLE within the stated ranges only.
+% ---------------------------------------------------------
+\geometry{
+  a4paper,
+  top=32mm,
+  bottom=27mm,
+  left=37mm,
+  right=22mm,
+}
+
+% ---------------------------------------------------------
+% FONT CONFIGURATION
+% ---------------------------------------------------------
+% Source: UG_REPORT_FORMAT.pdf §4, FORMAT_RULES.md §3
+%
+% Official requirement: Times New Roman for all text.
+% DO NOT CHANGE the font family.
+%
+% NOTE FOR OVERLEAF: XeLaTeX on Overleaf has Times New Roman
+% available as a system font. If compilation fails, try
+% using "TeX Gyre Termes" as the fallback — it is metrically
+% identical to Times New Roman and always available.
+% ---------------------------------------------------------
+\setmainfont{Times New Roman}[
+  Ligatures=TeX,
+]
+% Fallback if Times New Roman is unavailable:
+% \setmainfont{TeX Gyre Termes}[Ligatures=TeX]
+
+% ---------------------------------------------------------
+% BASE FONT SIZE
+% ---------------------------------------------------------
+% Source: UG_REPORT_FORMAT.pdf §4 — "Font size 14"
+%
+% The document class is set to 12pt as the base. We then
+% globally scale to 14pt using \fontsize. The extsize classes
+% don't work well with XeLaTeX fontspec, so this approach
+% is more reliable.
+%
+% 14pt font with 1.5 line spacing = 14 × 1.5 = 21pt leading.
+% The setspace package handles this more precisely.
+% DO NOT CHANGE.
+% ---------------------------------------------------------
+\renewcommand{\normalsize}{\fontsize{14}{21}\selectfont}
+\normalsize
+
+% ---------------------------------------------------------
+% LINE SPACING
+% ---------------------------------------------------------
+% Source: UG_REPORT_FORMAT.pdf §4, FORMAT_RULES.md §4
+%
+% Default spacing for general text: 1.5 spacing.
+% Specific sections override this (abstract=double,
+% references=single). Those overrides are applied locally
+% in their respective .tex files.
+% DO NOT CHANGE.
+% ---------------------------------------------------------
+\onehalfspacing
+
+% ---------------------------------------------------------
+% PARAGRAPH FORMATTING
+% ---------------------------------------------------------
+% Source: batch_86.pdf (observed)
+%
+% Paragraph indentation: ~1.27 cm (standard 0.5 inch)
+% Paragraph spacing: minimal (handled by line spacing)
+% Text alignment: justified
+%
+% CUSTOMIZABLE: parindent can be adjusted if your department
+% prefers a different indentation.
+% ---------------------------------------------------------
+\setlength{\parindent}{1.27cm}
+\setlength{\parskip}{0pt}
+
+% ---------------------------------------------------------
+% PAGE NUMBERING AND HEADERS/FOOTERS
+% ---------------------------------------------------------
+% Source: batch_86.pdf (observed), FORMAT_RULES.md §5
+%
+% Page numbers: centered at the bottom of the page.
+% No running headers or footers.
+% Front matter uses Roman numerals; main matter uses Arabic.
+% DO NOT CHANGE the number style or position.
+% ---------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Also apply to plain style (used on chapter opening pages)
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[C]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+% ---------------------------------------------------------
+% CHAPTER HEADING FORMAT
+% ---------------------------------------------------------
+% Source: batch_86.pdf (observed), FORMAT_RULES.md §7
+%
+% Chapter headings are centered with:
+%   Line 1: "CHAPTER X" (bold, 16pt)
+%   Line 2: "CHAPTER TITLE" (bold, 16pt)
+%
+% There is vertical space before and after the heading block.
+% DO NOT CHANGE the centering or bold style.
+% CUSTOMIZABLE: vertical spacing values.
+% ---------------------------------------------------------
+\titleformat{\chapter}[display]
+  {\normalfont\fontsize{16}{24}\bfseries\centering}
+  {CHAPTER \thechapter}
+  {0pt}
+  {\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+
+% ---------------------------------------------------------
+% SECTION HEADING FORMAT
+% ---------------------------------------------------------
+% Source: batch_86.pdf (observed), FORMAT_RULES.md §7
+%
+% Section headings: left-aligned, bold.
+% Example: "1.1 OVERVIEW"
+% Font size: same as body text (14pt), bold.
+%
+% NOTE: Write section titles in ALL CAPS in your source files
+% (e.g., \section{OVERVIEW}). This ensures both the body
+% heading and the TOC entry are correctly uppercased.
+% ---------------------------------------------------------
+\titleformat{\section}
+  {\normalfont\fontsize{14}{21}\bfseries}
+  {\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{18pt}{12pt}
+
+% ---------------------------------------------------------
+% SUBSECTION HEADING FORMAT
+% ---------------------------------------------------------
+% Source: batch_86.pdf (observed)
+%
+% Subsection headings: left-aligned, bold.
+% Example: "3.1.1 Use Case Diagram of Threat Detection"
+% Font size: same as body text (14pt), bold.
+% NOT uppercased (title case is used in the sample report).
+% ---------------------------------------------------------
+\titleformat{\subsection}
+  {\normalfont\fontsize{14}{21}\bfseries}
+  {\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{14pt}{10pt}
+
+% ---------------------------------------------------------
+% SUBSUBSECTION HEADING FORMAT
+% ---------------------------------------------------------
+\titleformat{\subsubsection}
+  {\normalfont\fontsize{14}{21}\bfseries}
+  {\thesubsubsection}{1em}{}
+\titlespacing*{\subsubsection}{0pt}{12pt}{8pt}
+
+% ---------------------------------------------------------
+% TABLE OF CONTENTS FORMATTING
+% ---------------------------------------------------------
+% Source: UG_REPORT_FORMAT.pdf §3.4, Appendix 3
+%
+% TOC header columns: CHAPTER NO. | TITLE | PAGE NO.
+% Entries should be in CAPITAL LETTERS.
+% 1.5 line spacing.
+% Leader dots connect title to page number.
+% ---------------------------------------------------------
+
+% Rename the TOC title
+\renewcommand{\contentsname}{TABLE OF CONTENTS}
+
+% Chapter entries in TOC: bold
+\renewcommand{\cftchapfont}{\bfseries}
+\renewcommand{\cftchappagefont}{\bfseries}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+
+% Section entries in TOC
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+
+% Subsection entries in TOC
+\renewcommand{\cftsubsecfont}{\normalfont}
+\renewcommand{\cftsubsecpagefont}{\normalfont}
+
+% Indentation for TOC levels
+\setlength{\cftchapindent}{0em}
+\setlength{\cftchapnumwidth}{4em}
+\setlength{\cftsecindent}{4em}
+\setlength{\cftsecnumwidth}{2.5em}
+\setlength{\cftsubsecindent}{6.5em}
+\setlength{\cftsubsecnumwidth}{3.5em}
+
+% Spacing between TOC entries
+\setlength{\cftbeforechapskip}{6pt}
+\setlength{\cftbeforesecskip}{3pt}
+\setlength{\cftbeforesubsecskip}{2pt}
+
+% ---------------------------------------------------------
+% LIST OF FIGURES FORMATTING
+% ---------------------------------------------------------
+% Source: UG_REPORT_FORMAT.pdf §3.6
+% 1.5 spacing, captions must match exactly.
+% ---------------------------------------------------------
+\renewcommand{\listfigurename}{LIST OF FIGURES}
+\renewcommand{\cftfigfont}{\normalfont}
+\renewcommand{\cftfigpagefont}{\normalfont}
+\renewcommand{\cftfigindent}{0em}
+\renewcommand{\cftfignumwidth}{5em}
+
+% ---------------------------------------------------------
+% LIST OF TABLES FORMATTING
+% ---------------------------------------------------------
+% Source: UG_REPORT_FORMAT.pdf §3.5
+% 1.5 spacing, captions must match exactly.
+% ---------------------------------------------------------
+\renewcommand{\listtablename}{LIST OF TABLES}
+\renewcommand{\cfttabfont}{\normalfont}
+\renewcommand{\cfttabpagefont}{\normalfont}
+\renewcommand{\cfttabindent}{0em}
+\renewcommand{\cfttabnumwidth}{5em}
+
+% ---------------------------------------------------------
+% FIGURE AND TABLE CAPTION FORMAT
+% ---------------------------------------------------------
+% Source: FORMAT_RULES.md §10
+%
+% Figure captions: below the figure, bold label.
+% Table captions: above the table, bold label.
+% Numbering: Chapter.Sequence (e.g., Figure 3.1, Table 2.1).
+% ---------------------------------------------------------
+\captionsetup[figure]{
+  labelfont=bf,
+  textfont=normalfont,
+  labelsep=colon,
+  justification=centering,
+  font={normalsize},
+  skip=10pt,
+}
+
+\captionsetup[table]{
+  labelfont=bf,
+  textfont=normalfont,
+  labelsep=colon,
+  justification=centering,
+  font={normalsize},
+  skip=10pt,
+  position=above,
+}
+
+% ---------------------------------------------------------
+% CODE LISTING STYLE
+% ---------------------------------------------------------
+% Source: Chapter details PDF — Chapter 6 includes sample code
+%
+% CUSTOMIZABLE: colors, language, font size.
+% ---------------------------------------------------------
+\lstset{
+  basicstyle=\fontsize{11}{13}\ttfamily,
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\fontsize{9}{11}\ttfamily,
+  tabsize=4,
+  captionpos=b,
+  showstringspaces=false,
+  keywordstyle=\bfseries,
+  commentstyle=\itshape,
+}
+
+% ---------------------------------------------------------
+% FOOTNOTE FORMATTING
+% ---------------------------------------------------------
+% Source: UG_REPORT_FORMAT.pdf §3.8
+% Footnotes should be single spaced.
+% The setspace package applies single spacing to footnotes
+% by default when the main document uses \onehalfspacing,
+% so no additional configuration is needed here.
+% ---------------------------------------------------------

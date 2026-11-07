@@ -1,0 +1,119 @@
+% =========================================================
+% CHAPTER 2: LITERATURE SURVEY
+% =========================================================
+
+\chapter{LITERATURE SURVEY}
+\label{chap:literature_survey}
+
+The field of query optimization has a long history, and the application of
+machine learning to this domain has accelerated significantly in recent years.
+This chapter reviews the most relevant prior work, spanning traditional
+optimizer evaluation, learned query optimization, database configuration
+tuning, concept drift detection, and uncertainty estimation. Each paper is
+discussed in terms of its contribution, its achievements, and how it relates
+to the design and evaluation of QueryPilot.
+
+Leis et al. \cite{leis2015good} conducted a foundational empirical study
+titled ``How Good Are Query Optimizers, Really?'' published in the Proceedings
+of the VLDB Endowment in 2015. The authors systematically evaluated
+cardinality estimation errors across several commercial and open-source
+database systems, demonstrating that even small estimation errors compound
+across join trees and lead to dramatically suboptimal plan selections. Their
+key finding was that cardinality misestimation, rather than the cost model
+itself, is the primary source of optimizer failure in practice. This work
+establishes the foundational motivation for external optimization frameworks
+like QueryPilot: since internal statistics can become unrepresentative,
+learning from actual execution feedback provides a more reliable basis for
+optimization decisions than relying solely on pre-computed statistics.
+
+Marcus and Papaemmanouil \cite{marcus2019neo} introduced Neo, a learned query
+optimizer published in the Proceedings of the VLDB Endowment in 2019. Neo uses
+a value network trained on query execution feedback to evaluate candidate
+execution plans produced by the database's own optimizer, selecting the plan
+with the highest estimated value. The system achieves significant improvements
+over the native optimizer on the Join Order Benchmark by learning to avoid the
+compound cardinality estimation errors identified by Leis et al. However, Neo
+is tightly integrated with the database's plan enumeration engine and requires
+access to the plan search space. Crucially, Neo does not address what should
+happen when the model encounters queries that are dissimilar from its training
+distribution. QueryPilot differs from Neo by operating as an external
+middleware without requiring plan enumeration access, and by explicitly
+handling model uncertainty and workload drift.
+
+Marcus et al. \cite{marcus2021bao} presented Bao (Bandit Optimizer) at ACM
+SIGMOD 2021, framing optimizer hint selection as a contextual bandit problem.
+Bao uses a tree-convolutional neural network over the query plan structure to
+recommend one of a small, fixed set of hint configurations for each query.
+Bao's formulation is particularly relevant to QueryPilot because both systems
+work within a predefined hint space rather than enumerating all possible plans.
+Bao demonstrates strong performance on TPC-H and the Join Order Benchmark and
+has been extended to handle non-stationary workloads using a sliding window
+approach. QueryPilot differs from Bao in that it adds an explicit uncertainty
+estimation layer using ensemble disagreement and a drift detection mechanism
+using the Page-Hinkley test, and uses a conservative fallback decision when
+uncertainty is high rather than always applying the bandit's recommendation.
+
+Van Aken et al. \cite{vanaken2017ottertune} introduced OtterTune, a system for
+automatic database management system tuning through large-scale machine
+learning, presented at ACM SIGMOD in 2017. OtterTune uses Gaussian process
+regression to recommend database configuration knob settings --- such as buffer
+pool size, thread count, and I/O scheduler parameters --- based on a repository
+of previously observed workload-configuration-performance tuples. Unlike
+query-level optimizers, OtterTune operates at the configuration level and
+targets long-term system throughput rather than per-query execution time.
+QueryPilot operates at the per-query level and does not modify database
+configuration. OtterTune's use of uncertainty-aware regression via Gaussian
+processes is conceptually related to QueryPilot's ensemble uncertainty
+estimation, but the two systems address fundamentally different optimization
+targets and operate at different granularities.
+
+Gama et al. \cite{gama2014survey} published a comprehensive survey titled ``A
+Survey on Concept Drift Adaptation'' in ACM Computing Surveys in 2014,
+reviewing the broad landscape of methods for learning from non-stationary data
+streams. The survey distinguishes between abrupt drift, gradual drift,
+recurring drift, and incremental drift, and categorizes detection methods as
+statistical process control methods, windowing methods, and ensemble methods.
+This taxonomy directly informed QueryPilot's experimental design, which
+evaluates performance under four scenarios corresponding to stable, sudden
+shift, gradual shift, and data skew workloads. The survey identifies
+statistical process control methods such as the Page-Hinkley test as well
+suited for detecting abrupt changes in data streams, which supports
+QueryPilot's choice of drift detector.
+
+Bifet and Gavalda \cite{bifet2007adwin} introduced the ADWIN (Adaptive
+Windowing) algorithm at the 2007 SIAM International Conference on Data Mining.
+ADWIN maintains a variable-length window over a data stream and automatically
+shrinks the window when a statistical change is detected, ensuring that the
+active window always contains data from the current distribution. ADWIN
+provides formal guarantees on false positive and false negative rates and is
+widely used in stream mining applications. QueryPilot uses the Page-Hinkley
+test instead of ADWIN, primarily because Page-Hinkley is computationally
+lighter for high-frequency query streams and does not require storing the full
+window of observations. Both methods are evaluated in the literature as
+effective for detecting abrupt shifts in data streams.
+
+Hinkley \cite{hinkley1971inference} originally proposed the sequential
+change-point detection method known as the Page-Hinkley test in the journal
+Biometrika in 1971. The test maintains a cumulative sum statistic that
+increases when observed values exceed the running mean by more than a small
+tolerance, and signals a change when this statistic exceeds a threshold. The
+test is well-suited to query execution time streams because it is
+computationally efficient with constant memory requirements, requires no window
+storage, and is sensitive to sustained upward shifts in mean execution time.
+QueryPilot implements the Page-Hinkley test with parameters $\delta = 0.005$
+and $\lambda = 25$, maintaining one detector per unique query signature in
+addition to a global detector.
+
+Lakshminarayanan et al. \cite{lakshminarayanan2017ensembles} demonstrated in
+their NeurIPS 2017 paper ``Simple and Scalable Predictive Uncertainty
+Estimation Using Deep Ensembles'' that training multiple independently
+initialized neural networks and using their output disagreement as an
+uncertainty signal is a practical and effective approach to uncertainty
+quantification. While the original paper focuses on deep neural networks,
+the ensemble disagreement principle generalizes to any ensemble of predictive
+models. QueryPilot applies this principle to an ensemble of three scikit-learn
+models --- Linear Regression, Random Forest Regressor, and Gradient Boosting
+Regressor --- where the standard deviation of the three predictions divided by
+their mean serves as the relative uncertainty estimate. This approach requires
+no Bayesian inference and introduces negligible computational overhead compared
+to training a single model.

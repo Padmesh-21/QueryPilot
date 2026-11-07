@@ -1,0 +1,73 @@
+% =========================================================
+% REFERENCES
+% =========================================================
+% Source: UG_REPORT_FORMAT.pdf §3.10
+%
+% FORMAT REQUIREMENTS (MANDATORY):
+%   - Heading: "REFERENCES" (centered, bold)
+%   - 4 line spaces below heading, then references begin
+%   - Alphabetical order by first author's surname
+%   - Single spacing within each reference
+%   - Left-justified
+%   - Numbered list (1., 2., 3., ...)
+%
+% HOW REFERENCES WORK IN THIS TEMPLATE:
+%   1. Add your paper details to bibliography.bib
+%   2. Use \cite{key} in your chapter text to cite
+%   3. The reference list below is generated automatically
+%      by BibTeX/Biber from your .bib file
+%   4. References are sorted alphabetically
+%
+% HOW TO COMPILE (Overleaf handles this automatically):
+%   1. pdflatex/xelatex main.tex
+%   2. bibtex main
+%   3. pdflatex/xelatex main.tex
+%   4. pdflatex/xelatex main.tex
+%
+% NOTE: If you prefer to write references manually instead
+% of using BibTeX, see the commented-out manual format at
+% the bottom of this file.
+% =========================================================
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{REFERENCES}
+
+% --- Apply single spacing for references ---
+% (mandatory per AU guidelines)
+\begin{singlespace}
+
+% Set bibliography style
+% 'unsrtnat' keeps the numbered format; entries are sorted
+% by BibTeX alphabetically because natbib with sort&compress
+% is loaded in packages.tex.
+% 'plainnat' gives author-year style if you prefer that.
+\bibliographystyle{plainnat}
+
+% Load the bibliography database
+% This reads bibliography.bib and generates the reference list.
+\bibliography{bibliography}
+
+\end{singlespace}
+
+% =========================================================
+% MANUAL REFERENCES FORMAT (alternative — if not using BibTeX):
+%
+% If you prefer to type references manually, comment out
+% the \bibliography commands above and uncomment below:
+%
+% \begin{singlespace}
+% \begin{center}
+%   {\SubTitleSize\bfseries REFERENCES\par}
+% \end{center}
+% \vspace{4\baselineskip}
+%
+% \begin{enumerate}
+%   \item Author, A. and Author, B. (2023) 'Title of Paper',
+%         Journal Name, Vol.XX, No.Y, pp.123--456.
+%
+%   \item Author, C. et al. (2022) 'Another Paper Title',
+%         Conference Proceedings, City, pp.789--012.
+% \end{enumerate}
+% \end{singlespace}
+% =========================================================

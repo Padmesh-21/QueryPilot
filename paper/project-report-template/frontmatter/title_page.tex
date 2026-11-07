@@ -1,0 +1,79 @@
+% =========================================================
+% TITLE PAGE
+% =========================================================
+
+\begin{titlepage}
+  \thispagestyle{empty}
+  \begin{center}
+
+    \vspace*{0.3cm}
+
+    % --- Project Title (18pt, Bold) ---
+    {\TitleSize\bfseries \ProjectTitle \par}
+
+    \vfill
+
+    % --- "A PROJECT REPORT" ---
+    {\NormalSize\bfseries A PROJECT REPORT\par}
+
+    \vspace{0.3cm}
+
+    % --- "Submitted by" ---
+    {\NormalSize\bfseries\itshape Submitted by\par}
+
+    \vspace{0.3cm}
+
+    % --- Student Names ---
+    {\SubTitleSize\bfseries
+      \StudentOneName{} (\StudentOneRegNo)\par
+      \vspace{0.1cm}
+      \StudentTwoName{} (\StudentTwoRegNo)\par
+    }
+
+    \vspace{0.3cm}
+
+    % --- "in partial fulfillment..." ---
+    {\NormalSize\itshape in partial fulfillment for the award of the degree\par}
+    {\NormalSize\itshape of\par}
+
+    \vspace{0.2cm}
+
+    % --- Degree Name ---
+    {\SubTitleSize\bfseries \DegreeName\par}
+
+    \vspace{0.1cm}
+    {\NormalSize\bfseries in\par}
+    \vspace{0.1cm}
+
+    % --- Branch ---
+    {\NormalSize\bfseries \BranchName\par}
+
+    \vfill
+
+    % --- College Logo ---
+    \IfFileExists{\CollegeLogoFile}{%
+      \includegraphics[height=1.8cm]{\CollegeLogoFile}\\[0.15cm]
+    }{}
+
+    {\NormalSize\bfseries \CollegeName\par}
+    \ifx\CollegeAutonomous\empty\else
+      {\NormalSize \CollegeAutonomous\par}
+    \fi
+
+    \vspace{0.3cm}
+
+    % --- University Logo ---
+    \IfFileExists{\UniversityLogoFile}{%
+      \includegraphics[height=1.7cm]{\UniversityLogoFile}\\[0.1cm]
+    }{}
+
+    % --- University Name ---
+    {\SubTitleSize\bfseries \UniversityName\par}
+
+    \vspace{0.2cm}
+
+    % --- Month and Year ---
+    {\NormalSize \SubmissionDate\par}
+
+  \end{center}
+\end{titlepage}

@@ -1,0 +1,20 @@
+% =========================================================
+% ABSTRACT
+% =========================================================
+
+\clearpage
+\thispagestyle{plain}
+
+\begin{center}
+  \vspace*{0.5cm}
+  {\SubTitleSize\bfseries ABSTRACT\par}
+\end{center}
+
+\vspace{1cm}
+
+\begin{doublespace}
+\setlength{\parindent}{1.27cm}
+
+\indent Database query performance degrades when workload patterns and data distributions evolve over time, yet most learned query optimization techniques do not account for this non-stationarity. This project presents QueryPilot, an external Python middleware that intercepts SQL queries issued to a MySQL 8.0 database, learns from observed execution performance, detects workload drift in real time, and makes bounded-risk adaptation decisions without requiring any modifications to database internals. At the core of QueryPilot is SAGE (Stability-Aware Guarded Execution), a decision controller that combines an ensemble-based uncertainty estimator, a Page-Hinkley sequential change-point detector, and a guarded fallback mechanism to choose between three actions for every incoming query: adapt (apply a MySQL optimizer hint), gather evidence (execute the native query and collect performance data), or fallback (defer to MySQL's native optimizer). The system extracts eight structural features from MySQL's EXPLAIN output, generates up to four candidate query variants using supported optimizer hints (NO\_INDEX, HASH\_JOIN, NO\_BKA), and trains a three-model ensemble of Linear Regression, Random Forest, and Gradient Boosting regressors incrementally on observed execution data. QueryPilot is evaluated on the TPC-H benchmark at scale factor 1 (8.6 million rows) under four controlled workload scenarios — stable, sudden shift, gradual shift, and data skew — using a methodologically rigorous interleaved execution design that eliminates buffer pool warm-up bias. The key finding is that an unconstrained ML-Only baseline causes performance regressions in 10 to 14 percent of queries under dynamic workload conditions, while QueryPilot with SAGE maintains a regression rate of 0.0 percent in every scenario tested. QueryPilot adds a median per-query overhead of 4.07 milliseconds on queries averaging 18 to 22 seconds in duration, representing less than 0.03 percent of total query time. A real-time Streamlit dashboard visualizes workload behaviour, query execution timelines, drift detection events, and SAGE decision distributions. These results demonstrate that a conservative, uncertainty-aware framework that knows when not to override the native optimizer is more robust than one that always applies its best machine learning recommendation, particularly under the dynamic workload conditions that characterize real-world database deployments.
+
+\end{doublespace}

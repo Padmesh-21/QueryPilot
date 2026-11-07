@@ -1,0 +1,73 @@
+% =========================================================
+% BONAFIDE CERTIFICATE
+% =========================================================
+% Source: UG_REPORT_FORMAT.pdf, Appendix 2 (specimen)
+%         batch_86.pdf (visual reference)
+%
+% FORMAT REQUIREMENTS:
+%   - "ANNA UNIVERSITY : CHENNAI 600 025" — 18pt, Bold, centered
+%   - University logo — centered (optional but shown in sample)
+%   - "BONAFIDE CERTIFICATE" — 16pt, Bold, centered
+%   - Body text — 14pt, Double spacing, Times New Roman
+%   - Two signature blocks at bottom (HOD and Supervisor)
+%   - 'SUPERVISOR' must be in capital letters
+%
+% DO NOT CHANGE the formatting — it matches the official specimen.
+% CUSTOMIZABLE: Only the metadata values (from metadata.tex).
+% =========================================================
+
+\clearpage
+\thispagestyle{plain}
+
+\begin{center}
+
+  % --- University Name (18pt, Bold) ---
+  \vspace*{0.3cm}
+  {\TitleSize\bfseries ANNA UNIVERSITY : CHENNAI 600 025\par}
+
+  % --- University Logo ---
+  \vspace{0.3cm}
+  \IfFileExists{\UniversityLogoFile}{%
+    \includegraphics[height=2cm]{\UniversityLogoFile}\\
+  }{}
+
+  % --- "BONAFIDE CERTIFICATE" heading (16pt, Bold) ---
+  \vspace{0.3cm}
+  {\SubTitleSize\bfseries BONAFIDE CERTIFICATE\par}
+
+\end{center}
+
+% --- Certificate Body Text (14pt, Double spacing) ---
+\vspace{0.6cm}
+\begin{doublespace}
+  \noindent
+  Certified that this project report ``\textbf{\ProjectTitle}''
+  is the bonafide work of
+  ``\textbf{\StudentOneName{} (\StudentOneRegNo)}''
+  and
+  ``\textbf{\StudentTwoName{} (\StudentTwoRegNo)}''
+  who carried out the project work under my supervision.
+  % If you have more students, modify the text above to include them.
+\end{doublespace}
+
+% --- Signature Blocks ---
+\vfill
+\noindent
+\begin{minipage}[t]{0.45\textwidth}
+  \textbf{SIGNATURE}\\[0.5cm]
+  \textbf{\HODName{} \HODQualification}\\
+  \textbf{\HODDesignation,}\\[0.2cm]
+  \textbf{\DepartmentName}\\
+  \CollegeName,\\
+  \CollegeAddress
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.45\textwidth}
+  \textbf{SIGNATURE}\\[0.5cm]
+  \textbf{\GuideName, \GuideQualification.}\\
+  \textbf{SUPERVISOR,}\\
+  \GuideDesignation\\[0.2cm]
+  \textbf{\DepartmentName}\\
+  \CollegeName,\\
+  \CollegeAddress
+\end{minipage}

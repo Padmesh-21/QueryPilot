@@ -1,0 +1,131 @@
+% =========================================================
+% CUSTOM COMMANDS AND SHORTCUTS
+% =========================================================
+% This file defines reusable LaTeX commands that simplify
+% common tasks throughout the document.
+%
+% HOW TO USE: Call these commands in your chapter files
+% to maintain consistency and save typing effort.
+% =========================================================
+
+% ---------------------------------------------------------
+% FONT SIZE SHORTCUTS
+% ---------------------------------------------------------
+% These commands provide named font sizes matching the
+% Anna University guidelines. Use them on the title page,
+% certificates, and headings.
+%
+% USAGE: {\TitleSize This text will be 18pt}
+% ---------------------------------------------------------
+\newcommand{\TitleSize}{\fontsize{18}{27}\selectfont}
+\newcommand{\SubTitleSize}{\fontsize{16}{24}\selectfont}
+\newcommand{\NormalSize}{\fontsize{14}{21}\selectfont}
+\newcommand{\SmallSize}{\fontsize{12}{18}\selectfont}
+
+% ---------------------------------------------------------
+% FIGURE INSERTION COMMAND
+% ---------------------------------------------------------
+% Inserts a figure with proper formatting in one command.
+%
+% USAGE:
+%   \insertfigure{width=0.8\textwidth}{filename}{Caption text}{fig:label}
+%
+% PARAMETERS:
+%   #1 = width specification (e.g., width=0.8\textwidth)
+%   #2 = image filename (relative to figures/ folder)
+%   #3 = caption text
+%   #4 = label for cross-referencing (use \ref{fig:label})
+%
+% EXAMPLE:
+%   \insertfigure{width=0.8\textwidth}{use_case_diagram}{Use Case Diagram of the System}{fig:usecase}
+%   As shown in Figure~\ref{fig:usecase}, the system...
+% ---------------------------------------------------------
+\newcommand{\insertfigure}[4]{%
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[#1]{#2}
+    \caption{#3}
+    \label{#4}
+  \end{figure}
+}
+
+% ---------------------------------------------------------
+% TABLE INSERTION HELPER
+% ---------------------------------------------------------
+% For creating a simple table with a caption above it.
+% For complex tables, write the tabular environment directly.
+%
+% USAGE:
+%   \begin{table}[htbp]
+%     \centering
+%     \caption{Your table caption}
+%     \label{tab:yourlabel}
+%     \begin{tabular}{|c|c|c|}
+%       \hline
+%       Header 1 & Header 2 & Header 3 \\
+%       \hline
+%       Data 1   & Data 2   & Data 3   \\
+%       \hline
+%     \end{tabular}
+%   \end{table}
+%
+% Remember: Table captions go ABOVE the table (per AU guidelines).
+% Figure captions go BELOW the figure.
+% ---------------------------------------------------------
+
+% ---------------------------------------------------------
+% CROSS-REFERENCE SHORTCUTS
+% ---------------------------------------------------------
+% These commands ensure consistent formatting when referring
+% to figures, tables, chapters, and equations in the text.
+%
+% USAGE:
+%   As shown in \figref{fig:usecase}, the system...
+%   The values are listed in \tabref{tab:results}.
+%   This is discussed in \chapref{chap:intro}.
+%   From \eqref{eq:formula}, we can derive...
+% ---------------------------------------------------------
+\newcommand{\figref}[1]{Figure~\ref{#1}}
+\newcommand{\tabref}[1]{Table~\ref{#1}}
+\newcommand{\chapref}[1]{Chapter~\ref{#1}}
+
+% ---------------------------------------------------------
+% SIGNATURE BLOCK COMMAND
+% ---------------------------------------------------------
+% Creates a signature block used on certificate pages.
+%
+% USAGE:
+%   \signatureblock{Dr. Name}{DESIGNATION}{Department}{Address}
+%
+% PARAMETERS:
+%   #1 = Name
+%   #2 = Designation/Role (e.g., SUPERVISOR, HEAD OF THE DEPARTMENT)
+%   #3 = Department
+%   #4 = Address
+% ---------------------------------------------------------
+\newcommand{\signatureblock}[4]{%
+  \begin{minipage}[t]{0.45\textwidth}
+    \vspace{1.5cm}
+    \textbf{SIGNATURE}\\[0.5cm]
+    \textbf{#1}\\
+    \textbf{#2}\\[0.3cm]
+    \textbf{#3}\\
+    #4
+  \end{minipage}%
+}
+
+% ---------------------------------------------------------
+% BLANK PAGE COMMAND
+% ---------------------------------------------------------
+% Inserts a completely blank page (no headers, footers, or
+% page numbers). Useful for the back of the title page in
+% double-sided printing.
+%
+% USAGE: \blankpage
+% ---------------------------------------------------------
+\newcommand{\blankpage}{%
+  \clearpage
+  \thispagestyle{empty}
+  \mbox{}
+  \clearpage
+}

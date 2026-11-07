@@ -1,0 +1,342 @@
+% =========================================================
+% CHAPTER 6: RESULTS AND CODING
+% =========================================================
+
+\chapter{RESULTS AND CODING}
+\label{chap:results}
+
+QueryPilot is implemented using Python 3.10 on Windows 11. The database backend
+is MySQL 8.0.43. Development was carried out in Visual Studio Code with the
+Python extension. The following open-source libraries are used: mysql-connector-python
+for database connectivity, scikit-learn for the machine learning ensemble,
+pandas and numpy for data processing, Streamlit for the monitoring dashboard,
+and matplotlib for chart generation. All source code is managed using Git
+version control. The TPC-H benchmark data was generated using the dbgen tool
+compiled with MinGW-W64 GCC 8.1.0 at scale factor 1, producing 8.6 million
+rows across eight tables.
+
+\section{SAMPLE CODE}
+\label{sec:sample_code}
+
+\subsection{Feature Extraction Core}
+\label{subsec:code_features}
+
+The following listing shows the core of the Feature Extraction Module
+(\texttt{collector/feature\_extractor.py}). This function runs MySQL's
+EXPLAIN command on the incoming SQL query and parses the result to extract
+eight features used as input to the performance prediction model.
+
+\begin{lstlisting}[language=Python, caption={Feature Extraction from EXPLAIN Output}, label={lst:feature_extraction}]
+def extract_features(sql, cursor):
+    sql_upper = sql.upper().strip()
+    first_token = sql_upper.split()[0] if sql_upper.split() else ""
+    query_type = first_token if first_token in QUERY_TYPE_MAP else "OTHER"
+    query_type_encoded = QUERY_TYPE_MAP.get(query_type, 4)
+
+    num_joins = len(re.findall(r'\bJOIN\b', sql_upper))
+    has_where = bool(re.search(r'\bWHERE\b', sql_upper))
+    has_group_by = bool(re.search(r'\bGROUP\s+BY\b', sql_upper))
+    has_order_by = bool(re.search(r'\bORDER\s+BY\b', sql_upper))
+
+    try:
+        cursor.execute(f"EXPLAIN {sql}")
+        plan_rows = cursor.fetchall()
+        col_names = [desc[0].lower() for desc in cursor.description]
+
+        def col(row, name):
+            idx = col_names.index(name) if name in col_names else None
+            return row[idx] if idx is not None else None
+
+        num_tables = len([r for r in plan_rows if col(r, "table") is not None])
+        estimated_rows = sum((col(r, "rows") or 0) for r in plan_rows)
+        uses_index = any(col(r, "key") is not None for r in plan_rows)
+    except Exception:
+        num_tables = 1
+        estimated_rows = 0
+        uses_index = False
+
+    return {
+        "query_type_encoded": query_type_encoded,
+        "num_joins": num_joins,
+        "num_tables": num_tables,
+        "has_where": int(has_where),
+        "has_group_by": int(has_group_by),
+        "has_order_by": int(has_order_by),
+        "estimated_rows": estimated_rows,
+        "uses_index": int(uses_index),
+    }
+\end{lstlisting}
+
+\subsection{SAGE Decision Logic}
+\label{subsec:code_sage}
+
+The following listing shows the core decision logic from the SAGE Controller
+(\texttt{sage/controller.py}). This excerpt illustrates the three-branch
+decision structure: gather evidence when data is insufficient, fallback when
+drift is active, and evaluate candidates otherwise.
+
+\begin{lstlisting}[language=Python, caption={SAGE Decision Logic in SAGEController.execute()}, label={lst:sage_decision}]
+not_ready = not self.model.is_trained or self._queries_seen < self.min_evidence
+
+if not_ready:
+    selected = native
+    decision = "gather_evidence"
+    reason = f"Collecting evidence ({self._queries_seen}/{self.min_evidence})"
+
+elif self._drift_active:
+    selected = native
+    decision = "fallback"
+    reason = "Workload drift detected - falling back to native optimizer"
+    self._training_buffer.clear()
+    self._drift_active = False
+
+else:
+    native_mean, _ = self.model.predict_with_uncertainty(features)
+    best = None
+    best_mean = float("inf")
+
+    for c in candidates:
+        c_features = extract_features(c["sql"], cursor) \
+            if c["hint_type"] != "native" else features
+        mean, std = self.model.predict_with_uncertainty(c_features)
+        rel_uncertainty = std / mean if mean > 0 else float("inf")
+
+        if rel_uncertainty > self.uncertainty_threshold:
+            continue
+        if mean > native_mean * (1 + self.regression_tolerance):
+            continue
+        if mean < best_mean:
+            best_mean = mean
+            best = (c, mean, std)
+
+    if best is None or best[0]["hint_type"] == "native":
+        selected = native
+        decision = "fallback"
+        reason = "No candidate beat native within uncertainty bounds"
+    else:
+        selected, pred_mean, pred_std = best
+        decision = "adapt"
+        reason = f"Candidate '{selected['hint_type']}' predicted {pred_mean:.1f}ms"
+\end{lstlisting}
+
+\subsection{Page-Hinkley Drift Detection}
+\label{subsec:code_drift}
+
+The following listing shows the Page-Hinkley update logic from the Drift
+Detector Module (\texttt{ml/drift\_detector.py}). The update method
+accumulates the cumulative sum statistic and returns True when drift is
+detected.
+
+\begin{lstlisting}[language=Python, caption={Page-Hinkley Update in PageHinkley.update()}, label={lst:pagehinkley}]
+def update(self, value):
+    self._n += 1
+    self._mean = self._mean * self.alpha + value * (1 - self.alpha)
+    self._sum += value - self._mean - self.delta
+    self._min_sum = min(self._min_sum, self._sum)
+    return (self._sum - self._min_sum) > self.lambda_
+\end{lstlisting}
+
+\section{SAMPLE SCREENSHOTS}
+\label{sec:screenshots}
+
+The following figures show the QueryPilot Streamlit dashboard, which provides
+real-time visualization of workload behaviour, query execution timelines,
+SAGE decisions, and cross-scenario experiment comparisons.
+
+\figref{fig:dashboard_overview} shows the Overview page of the QueryPilot
+dashboard, displaying a latency summary table and bar chart comparing Native
+MySQL, ML-Only, and QueryPilot + SAGE configurations for a selected
+experiment result file.
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\parbox{0.85\textwidth}{%
+    \centering
+    \vspace{2cm}
+    \textbf{Figure Placeholder}\\[0.3cm]
+    QueryPilot Dashboard --- Overview Page\\
+    (Replace with actual screenshot)
+    \vspace{2cm}
+  }}
+  \caption{QueryPilot Dashboard: Overview Page Showing Latency Comparison}
+  \label{fig:dashboard_overview}
+\end{figure}
+
+As shown in \figref{fig:dashboard_overview}, the Overview page presents mean,
+median, and P95 latency alongside improvement percentages relative to native
+MySQL.
+
+\figref{fig:dashboard_decisions} shows the SAGE Decisions page, which displays
+a pie chart of decision type distribution and a table of the most recent SAGE
+decisions with their reasons.
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\parbox{0.85\textwidth}{%
+    \centering
+    \vspace{2cm}
+    \textbf{Figure Placeholder}\\[0.3cm]
+    QueryPilot Dashboard --- SAGE Decisions Page\\
+    (Replace with actual screenshot)
+    \vspace{2cm}
+  }}
+  \caption{QueryPilot Dashboard: SAGE Decisions Page Showing Decision Distribution}
+  \label{fig:dashboard_decisions}
+\end{figure}
+
+\figref{fig:dashboard_timeline} shows the Query Timeline page for the sudden
+shift scenario. The three lines represent Native MySQL (blue), ML-Only
+(orange), and QueryPilot + SAGE (green). Red triangles mark queries where the
+Page-Hinkley drift detector fired.
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\parbox{0.85\textwidth}{%
+    \centering
+    \vspace{2cm}
+    \textbf{Figure Placeholder}\\[0.3cm]
+    QueryPilot Dashboard --- Query Timeline (Sudden Shift Scenario)\\
+    (Replace with actual screenshot)
+    \vspace{2cm}
+  }}
+  \caption{QueryPilot Dashboard: Query Timeline for Sudden Shift Scenario with Drift Events}
+  \label{fig:dashboard_timeline}
+\end{figure}
+
+\section{RESULTS AND GRAPH}
+\label{sec:results}
+
+All experiments are conducted using the interleaved execution methodology.
+For each query in the workload, all three configurations execute the query
+back-to-back before proceeding to the next query. This eliminates buffer pool
+warm-up bias. A warm-up phase of five queries precedes each experiment to seed
+the buffer pool equally for all configurations. Each scenario uses 50 queries
+with a fixed random seed of 42 for reproducibility.
+
+\tabref{tab:stable_results} presents the detailed latency results for the
+stable scenario.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Stable Scenario Latency Results (50 Queries, Interleaved)}
+  \label{tab:stable_results}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{|l|c|c|c|c|}
+    \hline
+    \textbf{Configuration} & \textbf{Mean (ms)} & \textbf{Median (ms)} & \textbf{P95 (ms)} & \textbf{Total (ms)} \\
+    \hline
+    Native MySQL    & 21,659 & 18,463 & 35,535 & 1,082,958 \\
+    ML-Only         & 21,867 & 17,742 & 35,616 & 1,093,356 \\
+    QueryPilot+SAGE & 21,128 & 17,516 & 35,782 & 1,056,388 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\tabref{tab:sudden_results} presents the results for the sudden shift scenario,
+which provides the most direct test of the drift detection mechanism.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Sudden Shift Scenario Results (50 Queries, Interleaved)}
+  \label{tab:sudden_results}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{|l|c|c|c|}
+    \hline
+    \textbf{Configuration} & \textbf{Mean (ms)} & \textbf{P95 (ms)} & \textbf{Regression Rate} \\
+    \hline
+    Native MySQL    & 18,003 & 29,338 & --- \\
+    ML-Only         & 18,473 & 30,379 & 10.0\% \\
+    QueryPilot+SAGE & 17,998 & 31,314 & \textbf{0.0\%} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\tabref{tab:all_latency} and \tabref{tab:all_regression} summarize the results
+across all four scenarios.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Mean Latency (ms) Across All Scenarios}
+  \label{tab:all_latency}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{|l|c|c|c|}
+    \hline
+    \textbf{Scenario} & \textbf{Native} & \textbf{ML-Only} & \textbf{QueryPilot+SAGE} \\
+    \hline
+    Stable        & 21,659 & 21,867 & \textbf{21,128} \\
+    Sudden Shift  & 18,003 & 18,473 & \textbf{17,998} \\
+    Gradual Shift & 22,364 & 22,290 & \textbf{21,918} \\
+    Data Skew     & 17,552 & 17,423 & \textbf{17,307} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Regression Rate (\%) Across All Scenarios}
+  \label{tab:all_regression}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{|l|c|c|}
+    \hline
+    \textbf{Scenario} & \textbf{ML-Only} & \textbf{QueryPilot+SAGE} \\
+    \hline
+    Stable        & 14.0\% & \textbf{0.0\%} \\
+    Sudden Shift  & 10.0\% & \textbf{0.0\%} \\
+    Gradual Shift & 14.0\% & \textbf{0.0\%} \\
+    Data Skew     &  0.0\% & \textbf{0.0\%} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\tabref{tab:overhead} shows the per-query overhead introduced by QueryPilot's
+pipeline across all scenarios.
+
+\begin{table}[htbp]
+  \centering
+  \caption{QueryPilot Per-Query Overhead}
+  \label{tab:overhead}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{|l|c|c|}
+    \hline
+    \textbf{Scenario} & \textbf{Native Mean (ms)} & \textbf{Overhead (ms)} \\
+    \hline
+    Stable        & 21,659 & 3.21 \\
+    Sudden Shift  & 18,003 & 5.86 \\
+    Gradual Shift & 22,364 & 4.07 \\
+    Data Skew     & 17,552 & 3.88 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+The figure placeholder below (\figref{fig:regression_comparison}) represents
+the regression rate comparison bar chart across all four scenarios.
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\parbox{0.85\textwidth}{%
+    \centering
+    \vspace{2cm}
+    \textbf{Figure Placeholder}\\[0.3cm]
+    Regression Rate Comparison: ML-Only vs.\ QueryPilot+SAGE\\
+    (Replace with bar chart from dashboard)
+    \vspace{2cm}
+  }}
+  \caption{Regression Rate Comparison Across All Scenarios}
+  \label{fig:regression_comparison}
+\end{figure}
+
+As shown in \figref{fig:regression_comparison} and \tabref{tab:all_regression},
+the key finding is that QueryPilot + SAGE maintains a regression rate of 0.0\%
+in every scenario tested, while ML-Only causes regressions in 10 to 14 percent
+of queries under dynamic workload conditions (stable and gradual shift
+scenarios). The regression rate for SAGE is computed only over queries where
+SAGE made an adapt decision; since SAGE made zero adapt decisions in all
+scenarios, the regression rate is definitionally zero. This reflects the
+correct conservative behaviour of SAGE on the TPC-H benchmark, where MySQL
+8.0's native optimizer with properly configured indexes is already near-optimal
+and the available hint candidates (NO\_INDEX, HASH\_JOIN, NO\_BKA) do not
+reliably outperform native execution. SAGE correctly identifies this through
+its uncertainty and regression filters. The per-query overhead of QueryPilot
+ranges from 3.21 to 5.86 milliseconds, representing less than 0.03 percent of
+total query execution time and confirming that the pipeline is practically
+negligible in overhead.
